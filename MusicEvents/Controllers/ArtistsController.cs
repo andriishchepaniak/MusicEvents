@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using Core.Services;
 using Microsoft.AspNetCore.Mvc;
+using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
 using SongkickEntities;
 using System;
@@ -17,8 +18,8 @@ namespace MusicEvents.Controllers
     public class ArtistsController : ControllerBase
     {
         private readonly IArtistService _artistService;
-        private readonly ArtistServiceApi _artistServiceApi;
-        public ArtistsController(IArtistService artistService, ArtistServiceApi artistServiceApi)
+        private readonly IArtistServiceApi _artistServiceApi;
+        public ArtistsController(IArtistService artistService, IArtistServiceApi artistServiceApi)
         {
             _artistService = artistService;
             _artistServiceApi = artistServiceApi;

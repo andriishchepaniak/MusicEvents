@@ -15,8 +15,8 @@ namespace SongkickApi
         {
             services.AddTransient<IRestClient, RestClient>();
             services.AddTransient<SongkickServiceApi>();
-            services.AddTransient<EventServiceApi>();
-            services.AddTransient<ArtistServiceApi>();
+            services.AddTransient<IEventServiceApi, EventServiceApi>();
+            services.AddTransient<IArtistServiceApi, ArtistServiceApi>();
             services.AddTransient<IVenueServiceApi, VenueServiceApi>();
             services.AddTransient<ILocationServiceApi, LocationServiceApi>();
 

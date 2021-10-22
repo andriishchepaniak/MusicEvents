@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using DAL.UnitOfWorkService;
 using Models.Entities;
+using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
 using SongkickEntities;
 using System;
@@ -14,9 +15,9 @@ namespace Core.Services
     public class EventService : IEventService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EventServiceApi _eventServiceApi;
+        private readonly IEventServiceApi _eventServiceApi;
         private readonly IMapper _mapper;
-        public EventService(IUnitOfWork unitOfWork, IMapper mapper, EventServiceApi eventServiceApi)
+        public EventService(IUnitOfWork unitOfWork, IMapper mapper, IEventServiceApi eventServiceApi)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

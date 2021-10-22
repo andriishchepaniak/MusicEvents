@@ -12,7 +12,6 @@ namespace MusicEventsMVC.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        //private readonly IUserRepository userRepository;
         private readonly IUserService _userService;
         public UsersController(IUserService userService)
         {
@@ -22,8 +21,6 @@ namespace MusicEventsMVC.Controllers
         [HttpGet]
         public async Task<IEnumerable<UserDTO>> Get(int offset=0, int count=2)
         {
-            //return await _unitOfWork.UserRepository.GetAll();
-            //return await _unitOfWork.UserRepository.GetAll(u => u.FirstName == "test");
             return await _userService.GetRange(offset, count);
         }
 

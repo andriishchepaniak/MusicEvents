@@ -3,6 +3,7 @@ using Core.Interfaces;
 using Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Models.Entities;
+using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
 using SongkickEntities;
 using System.Collections.Generic;
@@ -16,9 +17,9 @@ namespace MusicEventsMVC.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
-        private readonly EventServiceApi _eventServiceApi;
+        private readonly IEventServiceApi _eventServiceApi;
         private readonly IEventService _eventService;
-        public EventsController(EventServiceApi service, IEventService eventService)
+        public EventsController(IEventServiceApi service, IEventService eventService)
         {
             _eventServiceApi = service;
             _eventService = eventService;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Interfaces;
 using DAL.UnitOfWorkService;
+using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
 using SongkickEntities;
 using System.Collections.Generic;
@@ -11,9 +12,9 @@ namespace Core.Services
     public class ArtistService : IArtistService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ArtistServiceApi _artistServiceApi;
+        private readonly IArtistServiceApi _artistServiceApi;
         private readonly IMapper _mapper;
-        public ArtistService(IUnitOfWork unitOfWork, IMapper mapper, ArtistServiceApi artistServiceApi)
+        public ArtistService(IUnitOfWork unitOfWork, IMapper mapper, IArtistServiceApi artistServiceApi)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
