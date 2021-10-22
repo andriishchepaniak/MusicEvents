@@ -45,9 +45,12 @@ namespace Core.Services
                 (await _unitOfWork.ArtistSubscription.GetAll());
         }
 
-        public Task<IEnumerable<ArtistSubscriptionDTO>> GetAll(Expression<Func<ArtistSubscriptionDTO, bool>> predicate)
+        public async Task<IEnumerable<ArtistSubscriptionDTO>> GetAll(Expression<Func<ArtistSubscriptionDTO, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var expression = _mapper.Map<Expression<Func<ArtistSubscription, bool>>>(predicate);
+            return _mapper
+                .Map<IEnumerable<ArtistSubscriptionDTO>>
+                (await _unitOfWork.ArtistSubscription.GetAll(expression));
         }
 
         public async Task<ArtistSubscriptionDTO> GetById(int id)

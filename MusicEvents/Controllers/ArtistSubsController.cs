@@ -19,7 +19,7 @@ namespace MusicEventsMVC.Controllers
         }
         // GET: api/<SubscriptionsController>
         [HttpGet]
-        public async Task<IEnumerable<ArtistSubscriptionDTO>> Get(int artistId)
+        public async Task<IEnumerable<ArtistSubscriptionDTO>> Get()
         {
             return await _artistSubService.GetAll();
         }
@@ -34,8 +34,10 @@ namespace MusicEventsMVC.Controllers
 
         // PUT api/<SubscriptionsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ArtistSubscriptionDTO> Put(int id, [FromBody] ArtistSubscriptionDTO artistSubscription)
         {
+            await _artistSubService.Update(artistSubscription);
+            return artistSubscription;
         }
 
         // DELETE api/<SubscriptionsController>/5
