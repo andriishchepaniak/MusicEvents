@@ -7,7 +7,8 @@ using System.Text;
 namespace DAL.Repositories
 {
     public class CitySubscriptionRepository : 
-        BaseRepository<CitySubscription>, ICitySubscriptionRepository
+        BaseRepository<CitySubscription>, 
+        ICitySubscriptionRepository
     {
         public CitySubscriptionRepository(AppDbContext appDbContext) : base(appDbContext)
         {
