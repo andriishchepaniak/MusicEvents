@@ -26,27 +26,22 @@ namespace Core.Services
             _eventServiceApi = eventServiceApi;
         }
 
-        public Task<EventDTO> Add(EventDTO entity)
+        public Task<Event> Add(Event entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public Task Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<EventDTO>> GetAll()
+        public Task<IEnumerable<EventApi>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<EventDTO>> GetAll(Expression<Func<EventDTO, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<EventDTO> GetById(int id)
+        public Task<IEnumerable<EventApi>> GetAll(Expression<Func<EventApi, bool>> predicate)
         {
             throw new NotImplementedException();
         }
@@ -62,6 +57,12 @@ namespace Core.Services
             }
             return result;
         }
+
+        public Task<EventApi> GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<EventApi>> GetCityEventsByUserId(int userId)
         {
             var citySubs = await _unitOfWork.CitySubscription.GetAll(s => s.UserId == userId);
@@ -74,12 +75,12 @@ namespace Core.Services
             return result;
         }
 
-        public Task<IEnumerable<EventDTO>> GetRange(int offset, int count)
+        public Task<IEnumerable<EventApi>> GetRange(int offset, int count)
         {
             throw new NotImplementedException();
         }
 
-        public Task<EventDTO> Update(EventDTO entity)
+        public Task<EventApi> Update(EventApi entity)
         {
             throw new NotImplementedException();
         }

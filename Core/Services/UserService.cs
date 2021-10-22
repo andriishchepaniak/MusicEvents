@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BLL.DTO;
-using BLL.Interfaces;
+using Core.DTO;
+using Core.Interfaces;
 using DAL.UnitOfWork;
 using Models.Entities;
 using System;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BLL.Services
+namespace Core.Services
 {
     public class UserService : IUserService
     {
@@ -26,13 +26,7 @@ namespace BLL.Services
             return entity;
         }
 
-        public async void Delete(UserDTO entity)
-        {
-            _unitOfWork.UserRepository.Delete(_mapper.Map<User>(entity));
-            await _unitOfWork.SaveAsync();
-        }
-
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             _unitOfWork.UserRepository.Delete(id);
             await _unitOfWork.SaveAsync();

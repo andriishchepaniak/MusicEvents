@@ -15,6 +15,6 @@ namespace SongkickEntities
         public LocationEvent location { get; set; }
         public Venue venue { get; set; }
         public string status { get; set; }
-        public double popularity { get; set; }
+        public double? popularity { get; set; }
     }
 }

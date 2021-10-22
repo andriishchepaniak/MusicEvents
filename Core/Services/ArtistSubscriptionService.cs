@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BLL.DTO;
-using BLL.Interfaces;
+using Core.DTO;
+using Core.Interfaces;
 using DAL.UnitOfWork;
 using Models.Entities;
 using System;
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Services
+namespace Core.Services
 {
     public class ArtistSubscriptionService : IArtistSubscriptionService
     {
@@ -33,7 +33,7 @@ namespace BLL.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async void Delete(int id)
+        public async Task Delete(int id)
         {
             _unitOfWork.ArtistSubscription.Delete(id);
             await _unitOfWork.SaveAsync();

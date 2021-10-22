@@ -1,11 +1,11 @@
-﻿using BLL.DTO;
+﻿using Core.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.Interfaces
+namespace Core.Interfaces
 {
     public interface IArtistSubscriptionService
     {
@@ -15,7 +15,6 @@ namespace BLL.Interfaces
         Task<ArtistSubscriptionDTO> GetById(int id);
         Task<ArtistSubscriptionDTO> Add(ArtistSubscriptionDTO entity);
         Task<ArtistSubscriptionDTO> Update(ArtistSubscriptionDTO entity);
-        void Delete(ArtistSubscriptionDTO entity);
-        void Delete(int id);
+        Task Delete(int id);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BLL.DTO
+namespace Core.DTO
 {
     public class UserDTO
     {
@@ -14,7 +14,7 @@ namespace BLL.DTO
         public int Age { get; set; }
 
 
-        public virtual List<ArtistSubscriptionDTO> ArtistSubscriptions { get; set; }
-        public List<CitySubscriptionDTO> EventSubscriptions { get; set; }
+        public List<ArtistSubscriptionDTO> ArtistSubscriptions { get; set; }
+        public List<CitySubscriptionDTO> CitySubscriptions { get; set; }
     }
 }

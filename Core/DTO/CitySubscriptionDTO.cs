@@ -1,4 +1,4 @@
-﻿namespace BLL.DTO
+﻿namespace Core.DTO
 {
     public class CitySubscriptionDTO
     {

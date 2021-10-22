@@ -1,5 +1,5 @@
-﻿using BLL.DTO;
-using BLL.Interfaces;
+﻿using Core.DTO;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -40,9 +40,9 @@ namespace MusicEventsMVC.Controllers
 
         // DELETE api/<SubscriptionsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            _artistSubService.Delete(id);
+            await _artistSubService.Delete(id);
         }
     }
 }

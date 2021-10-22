@@ -1,5 +1,5 @@
-﻿using BLL.DTO;
-using BLL.Interfaces;
+﻿using Core.DTO;
+using Core.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
 using Models.Entities;
@@ -44,9 +44,9 @@ namespace MusicEventsMVC.Controllers
 
         // DELETE api/<EventSubsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            _citySubService.Delete(id);
+            await _citySubService.Delete(id);
         }
     }
 }

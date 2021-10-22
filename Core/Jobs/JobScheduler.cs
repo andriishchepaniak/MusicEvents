@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BLL.Jobs
+namespace Core.Jobs
 {
     public class JobScheduler
     {

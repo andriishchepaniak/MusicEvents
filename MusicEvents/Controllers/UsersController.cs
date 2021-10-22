@@ -1,5 +1,5 @@
-﻿using BLL.DTO;
-using BLL.Interfaces;
+﻿using Core.DTO;
+using Core.Interfaces;
 using DAL.Interfaces;
 using DAL.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
@@ -57,9 +57,9 @@ namespace MusicEventsMVC.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            _userService.Delete(id);
+            await _userService.Delete(id);
         }
     }
 }
