@@ -7,6 +7,7 @@ using SongkickAPI.Services;
 using SongkickEntities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -42,6 +43,20 @@ namespace Core.Services
         public Task<IEnumerable<EventApi>> GetAll(Expression<Func<EventApi, bool>> predicate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<EventApi>> GetArtistAndCityEventsByUserId(int userId)
+        {
+            var artistAndCituSubs = await _unitOfWork.ArtistAndCitySubscription
+                .GetAll(s => s.UserId == userId);
+            var result = new List<EventApi>();
+            foreach (var sub in artistAndCituSubs)
+            {
+                var events = (await _eventServiceApi.GetArtistsUpcomingEvents(sub.ArtistId))
+                    .Where(e => e.venue.metroArea.id == sub.CityId);
+                result.AddRange(events);
+            }
+            return result;
         }
 
         public async Task<IEnumerable<EventApi>> GetArtistEventsByUserId(int userId)

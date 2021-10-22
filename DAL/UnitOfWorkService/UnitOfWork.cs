@@ -16,16 +16,20 @@ namespace DAL.UnitOfWorkService
 
         public ICitySubscriptionRepository CitySubscription { get; }
 
+        public IArtistAndCitySubscriptionRepository ArtistAndCitySubscription { get; }
+
         public UnitOfWork(
             AppDbContext context,
             IUserRepository userRepository,
             IArtistSubscriptionRepository artistSubscription,
-            ICitySubscriptionRepository citySubscription)
+            ICitySubscriptionRepository citySubscription,
+            IArtistAndCitySubscriptionRepository artistAndCitySubscription)
         {
             _context = context;
             UserRepository = userRepository;
             ArtistSubscription = artistSubscription;
             CitySubscription = citySubscription;
+            ArtistAndCitySubscription = artistAndCitySubscription;
         }
         public async Task<int> SaveAsync()
         {

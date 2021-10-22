@@ -19,6 +19,9 @@ namespace DAL
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IArtistSubscriptionRepository, ArtistSubscriptionRepository>();
             services.AddTransient<ICitySubscriptionRepository, CitySubscriptionRepository>();
+            services.AddTransient<IArtistAndCitySubscriptionRepository, 
+                                  ArtistAndCitySubscriptionRepository>();
+
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
     }

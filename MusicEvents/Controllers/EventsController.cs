@@ -57,6 +57,12 @@ namespace MusicEventsMVC.Controllers
         {
             return await _eventService.GetCityEventsByUserId(userId);
         }
+        [Route("[action]/{userId}")]
+        [HttpGet()]
+        public async Task<IEnumerable<EventApi>> GetUsersArtistsAndCitiesEvents(int userId)
+        {
+            return await _eventService.GetArtistAndCityEventsByUserId(userId);
+        }
         
         // GET api/<EventsController>/5
         [HttpGet("{id}")]

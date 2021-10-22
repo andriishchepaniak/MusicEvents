@@ -17,6 +17,7 @@ namespace Core
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IArtistSubscriptionService, ArtistSubscriptionService>();
             services.AddTransient<ICitySubscriptionService, CitySubscriptionService>();
+            services.AddTransient<IArtistAndCitySubscriptionService, ArtistAndCitySubscriptionService>();
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<IArtistService, ArtistService>();
         }

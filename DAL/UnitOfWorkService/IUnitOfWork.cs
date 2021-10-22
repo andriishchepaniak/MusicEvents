@@ -12,6 +12,7 @@ namespace DAL.UnitOfWorkService
         IUserRepository UserRepository { get; }
         IArtistSubscriptionRepository ArtistSubscription { get; }
         ICitySubscriptionRepository CitySubscription { get; }
+        IArtistAndCitySubscriptionRepository ArtistAndCitySubscription { get; }
         Task<int> SaveAsync();
     }
 }
