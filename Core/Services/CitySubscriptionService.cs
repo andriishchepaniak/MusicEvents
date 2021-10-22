@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Core.DTO;
 using Core.Interfaces;
-using DAL.UnitOfWork;
+using DAL.UnitOfWorkService;
 using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Services

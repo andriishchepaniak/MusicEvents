@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SongkickAPI.Services
 {
-    public class LocationServiceApi : SongkickApi, ILocationServiceApi
+    public class LocationServiceApi : SongkickServiceApi, ILocationServiceApi
     {
         public LocationServiceApi(IRestClient client, IOptions<SongkickApiSettings> options) 
             : base(client, options)

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Core.DTO;
 using Core.Interfaces;
-using DAL.UnitOfWork;
+using DAL.UnitOfWorkService;
 using Models.Entities;
 using System;
 using System.Collections.Generic;

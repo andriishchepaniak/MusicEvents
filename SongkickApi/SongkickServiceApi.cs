@@ -6,12 +6,12 @@ using System;
 
 namespace SongkickAPI
 {
-    public class SongkickApi : ISongkickApi
+    public class SongkickServiceApi : ISongkickApi
     {
         protected IRestClient _client;
         protected string api_key;
 
-        public SongkickApi(IRestClient client, IOptions<SongkickApiSettings> options)
+        public SongkickServiceApi(IRestClient client, IOptions<SongkickApiSettings> options)
         {
             _client = client;
             _client.BaseUrl = new Uri(options.Value.BaseUrl);

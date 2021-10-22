@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using Core.Interfaces;
-using DAL.UnitOfWork;
+using DAL.UnitOfWorkService;
 using SongkickAPI.Services;
 using SongkickEntities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Services

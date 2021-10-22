@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SongkickAPI.Services
 {
-    public class VenueServiceApi : SongkickApi, IVenueServiceApi
+    public class VenueServiceApi : SongkickServiceApi, IVenueServiceApi
     {
         public VenueServiceApi(IRestClient client, IOptions<SongkickApiSettings> options) 
             : base(client, options)

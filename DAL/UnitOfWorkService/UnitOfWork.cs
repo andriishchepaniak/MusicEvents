@@ -1,10 +1,11 @@
 ﻿using DAL.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.UnitOfWork
+namespace DAL.UnitOfWorkService
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -17,7 +18,7 @@ namespace DAL.UnitOfWork
 
         public UnitOfWork(
             AppDbContext context,
-            IUserRepository userRepository, 
+            IUserRepository userRepository,
             IArtistSubscriptionRepository artistSubscription,
             ICitySubscriptionRepository citySubscription)
         {
