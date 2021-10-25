@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SongkickAPI.Interfaces;
 using SongkickEntities;
 using System;
@@ -12,23 +13,24 @@ namespace MusicEvents.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VenuesController : ControllerBase
+    public class VenuesController : BaseController<VenuesController>
     {
         private readonly IVenueServiceApi _venueServiceApi;
-        public VenuesController(IVenueServiceApi venueServiceApi)
+        public VenuesController(IVenueServiceApi venueServiceApi,
+            ILogger<VenuesController> logger) : base(logger)
         {
             _venueServiceApi = venueServiceApi;
         }
         // GET: api/<VenueController>
         [HttpGet]
-        public async Task<IEnumerable<Venue>> GetVenuesByName(string venueName)
+        public async Task<IActionResult> GetVenuesByName(string venueName)
         {
-            return await _venueServiceApi.GetVenuesByName(venueName);
+            return await ExecuteAction(async () => await _venueServiceApi.GetVenuesByName(venueName));
         }
         [HttpGet("{venueId}")]
-        public async Task<Venue> GetById(int venueId)
+        public async Task<IActionResult> GetById(int venueId)
         {
-            return await _venueServiceApi.GetVenueDetails(venueId);
+            return await ExecuteAction(async () => await _venueServiceApi.GetVenueDetails(venueId));
         }
     }
 }

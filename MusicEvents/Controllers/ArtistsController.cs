@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using Core.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
 using SongkickEntities;
@@ -15,11 +16,14 @@ namespace MusicEvents.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ArtistsController : ControllerBase
+    public class ArtistsController : BaseController<ArtistsController>
     {
         private readonly IArtistService _artistService;
         private readonly IArtistServiceApi _artistServiceApi;
-        public ArtistsController(IArtistService artistService, IArtistServiceApi artistServiceApi)
+        public ArtistsController(
+            IArtistService artistService, 
+            IArtistServiceApi artistServiceApi,
+            ILogger<ArtistsController> logger) : base(logger)
         {
             _artistService = artistService;
             _artistServiceApi = artistServiceApi;
@@ -27,31 +31,40 @@ namespace MusicEvents.Controllers
         
         [Route("[action]/{userId}")]
         [HttpGet()]
-        public async Task<IEnumerable<Artist>> GetUsersArtists(int userId)
+        public async Task<IActionResult> GetUsersArtists(int userId)
         {
-            return await _artistService.GetUsersArtists(userId);
-
+            return await ExecuteAction(async () =>
+            {
+                return await _artistService.GetUsersArtists(userId);
+            });
         }
         [Route("[action]/{artistId}")]
         [HttpGet()]
-        public async Task<IEnumerable<Artist>> GetSimilarArtists(int artistId)
+        public async Task<IActionResult> GetSimilarArtists(int artistId)
         {
-            return await _artistServiceApi.GetSimilarArtists(artistId);
-
+            return await ExecuteAction(async () =>
+            {
+                return await _artistServiceApi.GetSimilarArtists(artistId);
+            });
         }
         [Route("[action]/{artistName}")]
         [HttpGet()]
-        public async Task<IEnumerable<Artist>> GetArtistsByName(string artistName)
+        public async Task<IActionResult> GetArtistsByName(string artistName)
         {
-            return await _artistServiceApi.GetArtistsByName(artistName);
-
+            return await ExecuteAction(async () =>
+            {
+                return await _artistServiceApi.GetArtistsByName(artistName);
+            });
         }
 
         // GET api/<EventsController>/5
         [HttpGet("{id}")]
-        public async Task<Artist> GetArtistById(int id)
+        public async Task<IActionResult> GetArtistById(int id)
         {
-            return await _artistServiceApi.GetArtistDetails(id);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistServiceApi.GetArtistDetails(id);
+            });
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Core.DTO;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,48 +13,63 @@ namespace MusicEvents.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ArtistAndCitySubsController : ControllerBase
+    public class ArtistAndCitySubsController : BaseController<ArtistAndCitySubsController>
     {
         private readonly IArtistAndCitySubscriptionService _artistAndCitySubscriptionService;
         public ArtistAndCitySubsController
-            (IArtistAndCitySubscriptionService artistAndCitySubscriptionService)
+            (IArtistAndCitySubscriptionService artistAndCitySubscriptionService, 
+             ILogger<ArtistAndCitySubsController> logger) : base(logger)
         {
             _artistAndCitySubscriptionService = artistAndCitySubscriptionService;
         }
         // GET: api/<ArtistAndCituSubsController>
         [HttpGet]
-        public async Task<IEnumerable<ArtistAndCitySubscriptionDTO>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _artistAndCitySubscriptionService.GetAll();
+            return await ExecuteAction(async () =>
+            {
+                return await _artistAndCitySubscriptionService.GetAll();
+            });
         }
 
         // GET api/<ArtistAndCituSubsController>/5
         [HttpGet("{id}")]
-        public async Task<ArtistAndCitySubscriptionDTO> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return await _artistAndCitySubscriptionService.GetById(id);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistAndCitySubscriptionService.GetById(id);
+            });
         }
 
         // POST api/<ArtistAndCituSubsController>
         [HttpPost]
-        public async Task<ArtistAndCitySubscriptionDTO> Post([FromBody] ArtistAndCitySubscriptionDTO value)
+        public async Task<IActionResult> Post([FromBody] ArtistAndCitySubscriptionDTO value)
         {
-            return await _artistAndCitySubscriptionService.Add(value);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistAndCitySubscriptionService.Add(value);
+            });
         }
 
         // PUT api/<ArtistAndCituSubsController>/5
         [HttpPut("{id}")]
-        public async Task<ArtistAndCitySubscriptionDTO> Put(int id, [FromBody] ArtistAndCitySubscriptionDTO value)
+        public async Task<IActionResult> Put(int id, [FromBody] ArtistAndCitySubscriptionDTO value)
         {
-            return await _artistAndCitySubscriptionService.Add(value);
-
+            return await ExecuteAction(async () =>
+            {
+                return await _artistAndCitySubscriptionService.Add(value);
+            });
         }
 
         // DELETE api/<ArtistAndCituSubsController>/5
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _artistAndCitySubscriptionService.Delete(id);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistAndCitySubscriptionService.Delete(id);
+            });
         }
     }
 }

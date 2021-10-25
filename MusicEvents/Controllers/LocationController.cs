@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Models.SongkickEntities;
 using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
@@ -14,18 +15,19 @@ namespace MusicEvents.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LocationController : ControllerBase
+    public class LocationController : BaseController<LocationController>
     {
         private readonly ILocationServiceApi _locationServiceApi;
-        public LocationController(ILocationServiceApi locationServiceApi)
+        public LocationController(ILocationServiceApi locationServiceApi, 
+            ILogger<LocationController> logger) : base(logger)
         {
             _locationServiceApi = locationServiceApi;
         }
         [Route("[action]/{locationName}")]
         [HttpGet()]
-        public async Task<IEnumerable<LocationCity>> GetLocationsByName(string locationName)
+        public async Task<IActionResult> GetLocationsByName(string locationName)
         {
-            return await _locationServiceApi.GetByName(locationName);
+            return await ExecuteAction(async () => await _locationServiceApi.GetByName(locationName));
         }
     }
 }

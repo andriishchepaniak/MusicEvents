@@ -2,7 +2,9 @@
 using Core.Interfaces;
 using Core.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Models.Entities;
+using MusicEvents.Controllers;
 using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
 using SongkickEntities;
@@ -15,11 +17,14 @@ namespace MusicEventsMVC.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase
+    public class EventsController : BaseController<EventsController>
     {
         private readonly IEventServiceApi _eventServiceApi;
         private readonly IEventService _eventService;
-        public EventsController(IEventServiceApi service, IEventService eventService)
+        public EventsController(
+            IEventServiceApi service,
+            IEventService eventService,
+            ILogger<EventsController> logger) : base(logger)
         {
             _eventServiceApi = service;
             _eventService = eventService;
@@ -27,48 +32,64 @@ namespace MusicEventsMVC.Controllers
         // GET: api/<EventsController>
         [Route("[action]/{artistId}")]
         [HttpGet()]
-        public async Task<IEnumerable<EventApi>> GetArtistsEvents(int artistId)
+        public async Task<IActionResult> GetArtistsEvents(int artistId)
         {
-            return await _eventServiceApi.GetArtistsUpcomingEvents(artistId);
-            
+            return await ExecuteAction(async () =>
+            {
+                return await _eventServiceApi.GetArtistsUpcomingEvents(artistId);
+            });
         }
         [Route("[action]/{venueId}")]
         [HttpGet()]
-        public async Task<IEnumerable<EventApi>> GetVenuesEvents(int venueId)
+        public async Task<IActionResult> GetVenuesEvents(int venueId)
         {
-            return await _eventServiceApi.GetVenuesUpcomingEvents(venueId);   
+            return await ExecuteAction(async () =>
+            {
+                return await _eventServiceApi.GetVenuesUpcomingEvents(venueId);
+            });
         }
         [Route("[action]/{metroId}")]
         [HttpGet()]
-        public async Task<IEnumerable<EventApi>> GetMetroEvents(int metroId)
+        public async Task<IActionResult> GetMetroEvents(int metroId)
         {
-            return await _eventServiceApi.GetMetroUpcomingEvents(metroId);
-            
+            return await ExecuteAction(async () =>
+            {
+                return await _eventServiceApi.GetMetroUpcomingEvents(metroId);
+            });
         }
         [Route("[action]/{userId}")]
         [HttpGet()]
-        public async Task<IEnumerable<EventApi>> GetUsersArtistsEvents(int userId)
+        public async Task<IActionResult> GetUsersArtistsEvents(int userId)
         {
-            return await _eventService.GetArtistEventsByUserId(userId);
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.GetArtistEventsByUserId(userId);
+            });
         }
         [Route("[action]/{userId}")]
         [HttpGet()]
-        public async Task<IEnumerable<EventApi>> GetUsersCitiesEvents(int userId)
+        public async Task<IActionResult> GetUsersCitiesEvents(int userId)
         {
-            return await _eventService.GetCityEventsByUserId(userId);
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.GetCityEventsByUserId(userId);
+            });
         }
         [Route("[action]/{userId}")]
         [HttpGet()]
-        public async Task<IEnumerable<EventApi>> GetUsersArtistsAndCitiesEvents(int userId)
+        public async Task<IActionResult> GetUsersArtistsAndCitiesEvents(int userId)
         {
-            return await _eventService.GetArtistAndCityEventsByUserId(userId);
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.GetArtistAndCityEventsByUserId(userId);
+            });
         }
         
         // GET api/<EventsController>/5
         [HttpGet("{id}")]
-        public async Task<EventApi> GetEventById(int id)
+        public async Task<IActionResult> GetEventById(int id)
         {
-            return await _eventServiceApi.EventDetails(id);
+            return await ExecuteAction(async () => await _eventServiceApi.EventDetails(id));
         }
     }
 }

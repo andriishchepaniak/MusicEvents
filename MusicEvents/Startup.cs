@@ -38,8 +38,9 @@ namespace MusicEvents
             ConfigureSongkickApiExtension.ConfigureSongkickApi(services, Configuration);
 
             ConfigureCoreExtension.ConfigureCore(services);
-            
-            services.AddMvc().AddNewtonsoftJson();
+
+            services.AddMvc()
+                .AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

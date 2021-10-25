@@ -1,6 +1,8 @@
 ﻿using Core.DTO;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using MusicEvents.Controllers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,41 +12,54 @@ namespace MusicEventsMVC.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ArtistSubsController : ControllerBase
+    public class ArtistSubsController : BaseController<ArtistSubsController>
     {
         private readonly IArtistSubscriptionService _artistSubService;
-        public ArtistSubsController(IArtistSubscriptionService artistSubService)
+        public ArtistSubsController(IArtistSubscriptionService artistSubService,
+            ILogger<ArtistSubsController> logger) : base(logger)
         {
             _artistSubService = artistSubService;
         }
         // GET: api/<SubscriptionsController>
         [HttpGet]
-        public async Task<IEnumerable<ArtistSubscriptionDTO>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _artistSubService.GetAll();
+            return await ExecuteAction(async () =>
+            {
+                return await _artistSubService.GetAll();
+            });
         }
 
         // POST api/<SubscriptionsController>
         [HttpPost]
-        public async Task<ArtistSubscriptionDTO> Post([FromBody] ArtistSubscriptionDTO artistSubscription)
+        public async Task<IActionResult> Post([FromBody] ArtistSubscriptionDTO artistSubscription)
         {
-            await _artistSubService.Add(artistSubscription);
-            return artistSubscription;
+            return await ExecuteAction(async () =>
+            {
+                await _artistSubService.Add(artistSubscription);
+                return artistSubscription;
+            });
         }
 
         // PUT api/<SubscriptionsController>/5
         [HttpPut("{id}")]
-        public async Task<ArtistSubscriptionDTO> Put(int id, [FromBody] ArtistSubscriptionDTO artistSubscription)
+        public async Task<IActionResult> Put(int id, [FromBody] ArtistSubscriptionDTO artistSubscription)
         {
-            await _artistSubService.Update(artistSubscription);
-            return artistSubscription;
+            return await ExecuteAction(async () =>
+            {
+                await _artistSubService.Update(artistSubscription);
+                return artistSubscription;
+            });
         }
 
         // DELETE api/<SubscriptionsController>/5
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _artistSubService.Delete(id);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistSubService.Delete(id);
+            });
         }
     }
 }
