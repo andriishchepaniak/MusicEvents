@@ -18,6 +18,6 @@ namespace Core.Interfaces
         Task<EventApi> GetById(int id);
         Task<Event> Add(Event entity);
         Task<EventApi> Update(EventApi entity);
-        Task Delete(int id);
+        Task<int> Delete(int id);
     }
 }

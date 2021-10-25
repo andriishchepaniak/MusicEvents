@@ -15,6 +15,6 @@ namespace Core.Interfaces
         Task<CitySubscriptionDTO> GetById(int id);
         Task<CitySubscriptionDTO> Add(CitySubscriptionDTO entity);
         Task<CitySubscriptionDTO> Update(CitySubscriptionDTO entity);
-        Task Delete(int id);
+        Task<int> Delete(int id);
     }
 }

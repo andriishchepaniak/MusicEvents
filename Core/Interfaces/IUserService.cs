@@ -15,6 +15,6 @@ namespace Core.Interfaces
         Task<UserDTO> GetById(int id);
         Task<UserDTO> Add(UserDTO entity);
         Task<UserDTO> Update(UserDTO entity);
-        Task Delete(int id);
+        Task<int> Delete(int id);
     }
 }

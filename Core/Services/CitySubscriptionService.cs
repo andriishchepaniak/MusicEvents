@@ -32,10 +32,10 @@ namespace Core.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task Delete(int id)
+        public async Task<int> Delete(int id)
         {
             _unitOfWork.CitySubscription.Delete(id);
-            await _unitOfWork.SaveAsync();
+            return await _unitOfWork.SaveAsync();
         }
 
         public async Task<IEnumerable<CitySubscriptionDTO>> GetAll()

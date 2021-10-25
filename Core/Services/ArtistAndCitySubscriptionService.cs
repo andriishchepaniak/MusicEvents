@@ -29,10 +29,10 @@ namespace Core.Services
             return entity;
         }
 
-        public async Task Delete(int id)
+        public async Task<int> Delete(int id)
         {
             _unitOfWork.ArtistAndCitySubscription.Delete(id);
-            await _unitOfWork.SaveAsync();
+            return await _unitOfWork.SaveAsync();
         }
 
         public async Task<IEnumerable<ArtistAndCitySubscriptionDTO>> GetAll()

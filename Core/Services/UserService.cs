@@ -26,10 +26,10 @@ namespace Core.Services
             return entity;
         }
 
-        public async Task Delete(int id)
+        public async Task<int> Delete(int id)
         {
             _unitOfWork.UserRepository.Delete(id);
-            await _unitOfWork.SaveAsync();
+            return await _unitOfWork.SaveAsync();
         }
 
         public async Task<IEnumerable<UserDTO>> GetAll()

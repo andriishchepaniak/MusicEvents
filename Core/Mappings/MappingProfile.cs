@@ -10,8 +10,8 @@ namespace Core.Mappings
         {
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<CitySubscription, CitySubscriptionDTO>().ReverseMap();
-            CreateMap<ArtistSubscription, ArtistSubscriptionDTO>().ReverseMap();
             CreateMap<ArtistAndCitySubscription, ArtistAndCitySubscriptionDTO>().ReverseMap();
+            CreateMap<ArtistSubscription, ArtistSubscriptionDTO>().ReverseMap();
         }
     }
 }

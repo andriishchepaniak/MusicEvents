@@ -30,7 +30,7 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public Task Delete(int id)
+        public Task<int> Delete(int id)
         {
             throw new NotImplementedException();
         }
