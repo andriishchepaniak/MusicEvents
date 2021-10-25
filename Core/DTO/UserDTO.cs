@@ -14,7 +14,7 @@ namespace Core.DTO
         public int Age { get; set; }
 
 
-        public List<ArtistAndCitySubscriptionDTO> ArtistSubscriptions { get; set; }
+        public List<ArtistSubscriptionDTO> ArtistSubscriptions { get; set; }
         public List<CitySubscriptionDTO> CitySubscriptions { get; set; }
         public List<ArtistAndCitySubscriptionDTO> ArtistAndCitySubscriptions { get; set; }
     }
