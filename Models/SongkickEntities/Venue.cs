@@ -6,7 +6,7 @@ namespace SongkickEntities
 {
     public class Venue
     {
-        public int id { get; set; }
+        public int? id { get; set; }
         public string displayName { get; set; }
         public string uri { get; set; }
         
