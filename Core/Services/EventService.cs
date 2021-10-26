@@ -45,27 +45,27 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<EventApi>> GetArtistAndCityEventsByUserId(int userId)
+        public async Task<IEnumerable<EventApi>> GetArtistAndCityEventsByUserId(int userId, int page)
         {
             var artistAndCituSubs = await _unitOfWork.ArtistAndCitySubscription
                 .GetAll(s => s.UserId == userId);
             var result = new List<EventApi>();
             foreach (var sub in artistAndCituSubs)
             {
-                var events = (await _eventServiceApi.GetArtistsUpcomingEvents(sub.ArtistId))
+                var events = (await _eventServiceApi.GetArtistsUpcomingEvents(sub.ArtistId, page))
                     .Where(e => e.venue.metroArea.id == sub.CityId);
                 result.AddRange(events);
             }
             return result;
         }
 
-        public async Task<IEnumerable<EventApi>> GetArtistEventsByUserId(int userId)
+        public async Task<IEnumerable<EventApi>> GetArtistEventsByUserId(int userId, int page)
         {
             var artistSubs = await _unitOfWork.ArtistSubscription.GetAll(s => s.UserId == userId);
             var result = new List<EventApi>();
             foreach (var sub in artistSubs)
             {
-                var events = await _eventServiceApi.GetArtistsUpcomingEvents(sub.ArtistId);
+                var events = await _eventServiceApi.GetArtistsUpcomingEvents(sub.ArtistId, page);
                 result.AddRange(events);
             }
             return result;
@@ -76,13 +76,13 @@ namespace Core.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<EventApi>> GetCityEventsByUserId(int userId)
+        public async Task<IEnumerable<EventApi>> GetCityEventsByUserId(int userId, int page)
         {
             var citySubs = await _unitOfWork.CitySubscription.GetAll(s => s.UserId == userId);
             var result = new List<EventApi>();
             foreach (var sub in citySubs)
             {
-                var events = await _eventServiceApi.GetMetroUpcomingEvents(sub.CityId);
+                var events = await _eventServiceApi.GetMetroUpcomingEvents(sub.CityId, page);
                 result.AddRange(events);
             }
             return result;

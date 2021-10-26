@@ -12,9 +12,9 @@ namespace Core.Interfaces
         Task<IEnumerable<EventApi>> GetAll();
         Task<IEnumerable<EventApi>> GetAll(Expression<Func<EventApi, bool>> predicate);
         Task<IEnumerable<EventApi>> GetRange(int offset, int count);
-        Task<IEnumerable<EventApi>> GetArtistEventsByUserId(int userId);
-        Task<IEnumerable<EventApi>> GetCityEventsByUserId(int userId);
-        Task<IEnumerable<EventApi>> GetArtistAndCityEventsByUserId(int userId);
+        Task<IEnumerable<EventApi>> GetArtistEventsByUserId(int userId, int page);
+        Task<IEnumerable<EventApi>> GetCityEventsByUserId(int userId, int page);
+        Task<IEnumerable<EventApi>> GetArtistAndCityEventsByUserId(int userId, int page);
         Task<EventApi> GetById(int id);
         Task<Event> Add(Event entity);
         Task<EventApi> Update(EventApi entity);

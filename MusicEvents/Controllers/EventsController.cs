@@ -32,56 +32,56 @@ namespace MusicEventsMVC.Controllers
         // GET: api/<EventsController>
         [Route("[action]/{artistId}")]
         [HttpGet()]
-        public async Task<IActionResult> GetArtistsEvents(int artistId)
+        public async Task<IActionResult> GetArtistsEvents(int artistId, int page = 1)
         {
             return await ExecuteAction(async () =>
             {
-                return await _eventServiceApi.GetArtistsUpcomingEvents(artistId);
+                return await _eventServiceApi.GetArtistsUpcomingEvents(artistId, page);
             });
         }
         [Route("[action]/{venueId}")]
         [HttpGet()]
-        public async Task<IActionResult> GetVenuesEvents(int venueId)
+        public async Task<IActionResult> GetVenuesEvents(int venueId, int page = 1)
         {
             return await ExecuteAction(async () =>
             {
-                return await _eventServiceApi.GetVenuesUpcomingEvents(venueId);
+                return await _eventServiceApi.GetVenuesUpcomingEvents(venueId, page);
             });
         }
         [Route("[action]/{metroId}")]
         [HttpGet()]
-        public async Task<IActionResult> GetMetroEvents(int metroId)
+        public async Task<IActionResult> GetMetroEvents(int metroId, int page = 1)
         {
             return await ExecuteAction(async () =>
             {
-                return await _eventServiceApi.GetMetroUpcomingEvents(metroId);
+                return await _eventServiceApi.GetMetroUpcomingEvents(metroId, page);
             });
         }
         [Route("[action]/{userId}")]
         [HttpGet()]
-        public async Task<IActionResult> GetUsersArtistsEvents(int userId)
+        public async Task<IActionResult> GetUsersArtistsEvents(int userId, int page = 1)
         {
             return await ExecuteAction(async () =>
             {
-                return await _eventService.GetArtistEventsByUserId(userId);
+                return await _eventService.GetArtistEventsByUserId(userId, page);
             });
         }
         [Route("[action]/{userId}")]
         [HttpGet()]
-        public async Task<IActionResult> GetUsersCitiesEvents(int userId)
+        public async Task<IActionResult> GetUsersCitiesEvents(int userId, int page = 1)
         {
             return await ExecuteAction(async () =>
             {
-                return await _eventService.GetCityEventsByUserId(userId);
+                return await _eventService.GetCityEventsByUserId(userId, page);
             });
         }
         [Route("[action]/{userId}")]
         [HttpGet()]
-        public async Task<IActionResult> GetUsersArtistsAndCitiesEvents(int userId)
+        public async Task<IActionResult> GetUsersArtistsAndCitiesEvents(int userId, int page = 1)
         {
             return await ExecuteAction(async () =>
             {
-                return await _eventService.GetArtistAndCityEventsByUserId(userId);
+                return await _eventService.GetArtistAndCityEventsByUserId(userId, page);
             });
         }
         

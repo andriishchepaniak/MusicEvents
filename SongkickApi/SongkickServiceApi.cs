@@ -17,6 +17,17 @@ namespace SongkickAPI
             _client.BaseUrl = new Uri(options.Value.BaseUrl);
             api_key = options.Value.ApiKey;
         }
+
+        public int GetTotalCount(IRestResponse response)
+        {
+            JObject joResponse = JObject.Parse(response.Content);
+            JObject resPageObject = (JObject)joResponse["resultsPage"];
+            int totalEntries = (int)resPageObject["totalEntries"];
+            //JObject resultObj = (JObject)resPageObject["results"];
+
+            return totalEntries;
+        }
+
         public JObject ParseResult(IRestResponse response)
         {
             JObject joResponse = JObject.Parse(response.Content);

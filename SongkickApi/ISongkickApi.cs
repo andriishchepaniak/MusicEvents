@@ -5,7 +5,7 @@ namespace SongkickAPI
 {
     public interface ISongkickApi
     {
-
         JObject ParseResult(IRestResponse response);
+        int GetTotalCount(IRestResponse response);
     }
 }
