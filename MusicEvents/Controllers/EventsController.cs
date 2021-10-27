@@ -1,5 +1,6 @@
 ﻿using Core.DTO;
 using Core.Interfaces;
+using Core.Jobs;
 using Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -34,10 +35,13 @@ namespace MusicEventsMVC.Controllers
         [HttpGet()]
         public async Task<IActionResult> GetArtistsEvents(int artistId, int page = 1)
         {
-            return await ExecuteAction(async () =>
-            {
-                return await _eventServiceApi.GetArtistsUpcomingEvents(artistId, page);
-            });
+            AddArtistEventsScheduler.Start(artistId);
+            return Ok(await _eventService.GetEventsByArtistId(artistId, page));
+            //return await ExecuteAction(async () =>
+            //{
+            //    //return await _eventServiceApi.GetArtistsUpcomingEvents(artistId, page);
+            //    return await _eventService.GetEventsByArtistId(artistId, page);
+            //});
         }
         [Route("[action]/{venueId}")]
         [HttpGet()]

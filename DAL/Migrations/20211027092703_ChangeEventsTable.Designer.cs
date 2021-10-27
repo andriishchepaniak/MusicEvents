@@ -4,50 +4,22 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211027092703_ChangeEventsTable")]
+    partial class ChangeEventsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("ArtistUser", b =>
-                {
-                    b.Property<int>("ArtistsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ArtistsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ArtistUser");
-                });
-
-            modelBuilder.Entity("CityUser", b =>
-                {
-                    b.Property<int>("CitiesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CitiesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("CityUser");
-                });
 
             modelBuilder.Entity("EventUser", b =>
                 {
@@ -62,21 +34,6 @@ namespace DAL.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("EventUser");
-                });
-
-            modelBuilder.Entity("Models.Entities.Artist", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ArtistApiId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Artists");
                 });
 
             modelBuilder.Entity("Models.Entities.ArtistAndCitySubscription", b =>
@@ -102,19 +59,44 @@ namespace DAL.Migrations
                     b.ToTable("ArtistAndCitySubscriptions");
                 });
 
-            modelBuilder.Entity("Models.Entities.City", b =>
+            modelBuilder.Entity("Models.Entities.ArtistSubscription", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CityApiId")
+                    b.Property<int>("ArtistId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ArtistSubscriptions");
+                });
+
+            modelBuilder.Entity("Models.Entities.CitySubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CitySubscriptions");
                 });
 
             modelBuilder.Entity("Models.Entities.Event", b =>
@@ -171,36 +153,6 @@ namespace DAL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ArtistUser", b =>
-                {
-                    b.HasOne("Models.Entities.Artist", null)
-                        .WithMany()
-                        .HasForeignKey("ArtistsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CityUser", b =>
-                {
-                    b.HasOne("Models.Entities.City", null)
-                        .WithMany()
-                        .HasForeignKey("CitiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("EventUser", b =>
                 {
                     b.HasOne("Models.Entities.Event", null)
@@ -225,9 +177,31 @@ namespace DAL.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Models.Entities.ArtistSubscription", b =>
+                {
+                    b.HasOne("Models.Entities.User", null)
+                        .WithMany("ArtistSubscriptions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.Entities.CitySubscription", b =>
+                {
+                    b.HasOne("Models.Entities.User", null)
+                        .WithMany("CitySubscriptions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Models.Entities.User", b =>
                 {
                     b.Navigation("ArtistAndCitySubscriptions");
+
+                    b.Navigation("ArtistSubscriptions");
+
+                    b.Navigation("CitySubscriptions");
                 });
 #pragma warning restore 612, 618
         }

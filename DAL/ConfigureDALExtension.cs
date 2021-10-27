@@ -17,6 +17,7 @@ namespace DAL
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IEventRepository, EventRepository>();
             services.AddTransient<IArtistSubscriptionRepository, ArtistSubscriptionRepository>();
             services.AddTransient<ICitySubscriptionRepository, CitySubscriptionRepository>();
             services.AddTransient<IArtistAndCitySubscriptionRepository, 

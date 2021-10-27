@@ -9,17 +9,12 @@ namespace Models.Entities
     {
         public int Id { get; set; }
         public string DisplayName { get; set; }
-        public string Type { get; set; }
-        public string Uri { get; set; }
-        public string Status { get; set; }
-        public double Popularity { get; set; }
         public DateTime Date { get; set; }
-        public int ArtistId { get; set; }
-        public bool FlaggedAsEnded { get; set; }
-        public int VenueId { get; set; }
-        public int MetroAreId { get; set; }
-        public string City { get; set; }
+        public int EventApiId { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public int ArtistApiId { get; set; }
+        public int CityApiId { get; set; }
+
+        public List<User> Users { get; set; }
     }
 }

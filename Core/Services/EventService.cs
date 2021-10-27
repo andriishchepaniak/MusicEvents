@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Interfaces;
+using Core.Mappings;
 using DAL.UnitOfWorkService;
 using Models.Entities;
 using SongkickAPI.Interfaces;
@@ -25,24 +26,30 @@ namespace Core.Services
             _eventServiceApi = eventServiceApi;
         }
 
-        public Task<Event> Add(Event entity)
+        public async Task<Event> Add(Event entity)
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.EventRepository.Add(entity);
         }
 
-        public Task<int> Delete(int id)
+        public async Task<IEnumerable<Event>> AddRange(IEnumerable<Event> entities)
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.EventRepository.AddRange(entities);
         }
 
-        public Task<IEnumerable<EventApi>> GetAll()
+        public async Task<int> Delete(int id)
         {
-            throw new NotImplementedException();
+            _unitOfWork.EventRepository.Delete(id);
+            return await _unitOfWork.SaveAsync();
         }
 
-        public Task<IEnumerable<EventApi>> GetAll(Expression<Func<EventApi, bool>> predicate)
+        public async Task<IEnumerable<Event>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.EventRepository.GetAll();
+        }
+
+        public async Task<IEnumerable<Event>> GetAll(Expression<Func<Event, bool>> predicate)
+        {
+            return await _unitOfWork.EventRepository.GetAll(predicate);
         }
 
         public async Task<IEnumerable<EventApi>> GetArtistAndCityEventsByUserId(int userId, int page)
@@ -71,9 +78,9 @@ namespace Core.Services
             return result;
         }
 
-        public Task<EventApi> GetById(int id)
+        public async Task<EventApi> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _eventServiceApi.EventDetails(id);
         }
 
         public async Task<IEnumerable<EventApi>> GetCityEventsByUserId(int userId, int page)
@@ -88,14 +95,27 @@ namespace Core.Services
             return result;
         }
 
+        public async Task<IEnumerable<Event>> GetEventsByArtistId(int artistId, int page)
+        {
+            var eventsApi = await _eventServiceApi.GetArtistsUpcomingEvents(artistId, page);
+            var events = new List<Event>();
+            foreach (var eventApi in eventsApi)
+            {
+                events.Add(EventMapping.MapToEvent(eventApi));
+            }
+            return events;
+        }
+
         public Task<IEnumerable<EventApi>> GetRange(int offset, int count)
         {
             throw new NotImplementedException();
         }
 
-        public Task<EventApi> Update(EventApi entity)
+        public async Task<Event> Update(Event entity)
         {
-            throw new NotImplementedException();
+            _unitOfWork.EventRepository.Update(entity);
+            await _unitOfWork.SaveAsync();
+            return entity;
         }
     }
 }

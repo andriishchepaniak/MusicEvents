@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Interfaces;
+using Core.Jobs;
 using Core.Mappings;
 using Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,12 @@ namespace Core
             services.AddTransient<IArtistAndCitySubscriptionService, ArtistAndCitySubscriptionService>();
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<IArtistService, ArtistService>();
+
+            services.AddScoped<AddArtistEventsJob>();
+            //var serviceCollection = new ServiceCollection();
+            //serviceCollection
+            //var serviceProvider = serviceCollection.BuildServiceProvider();
+            //scheduler.JobFactory = new AddArtistEventsJobFactory(serviceProvider);
         }
     }
 }

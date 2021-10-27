@@ -15,13 +15,13 @@ namespace DAL.Repositories
         public override async Task<IEnumerable<User>> GetAll()
         {
             return await _db.Users
-                .Include(u => u.ArtistSubscriptions)
+                //.Include(u => u.ArtistSubscriptions)
                 .ToListAsync();
         }
         public override async Task<User> GetById(int id)
         {
             return await _db.Users
-                .Include(u => u.ArtistSubscriptions)
+                //.Include(u => u.ArtistSubscriptions)
                 .FirstOrDefaultAsync(u => u.Id.Equals(id));
         }
     }

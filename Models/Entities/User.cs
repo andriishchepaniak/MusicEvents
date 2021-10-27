@@ -16,8 +16,8 @@ namespace Models.Entities
         public string Password { get; set; }
         public int Age { get; set; }
 
-        public virtual List<ArtistSubscription> ArtistSubscriptions { get; set; }
-        public virtual List<CitySubscription> CitySubscriptions { get; set; }
+        public virtual List<Artist> Artists { get; set; }
+        public virtual List<City> Cities { get; set; }
         public virtual List<ArtistAndCitySubscription> ArtistAndCitySubscriptions { get; set; }
         public virtual List<Event> Events { get; set; }
     }
