@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.EmailService;
 using Core.Interfaces;
+using Core.Jobs;
 using Core.Mappings;
 using Core.Services;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,8 @@ namespace Core
             services.AddTransient<IArtistService, ArtistService>();
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
+            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<IJobService, JobService>();
 
             services.AddTransient<IMailService, MailService>();
             services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
