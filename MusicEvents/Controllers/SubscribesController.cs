@@ -1,6 +1,8 @@
 ﻿using Core.Interfaces;
+using Core.Jobs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,17 +17,23 @@ namespace MusicEvents.Controllers
     public class SubscribesController : BaseController<SubscribesController>
     {
         private readonly ISubscriptionService _subscriptionService;
+        private readonly INotificationService _notificationService;
+        private readonly IJobService _jobService;
         public SubscribesController(
-            ISubscriptionService subscriptionService, 
+            ISubscriptionService subscriptionService,
+            IJobService jobService,
+            INotificationService notificationService,
             ILogger<SubscribesController> logger) : base(logger)
         {
             _subscriptionService = subscriptionService;
+            _notificationService = notificationService;
+            _jobService = jobService;
         }
         // GET: api/<SubscribesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<Event>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await _notificationService.NotifyUsersAboutEvents();
         }
 
         // GET api/<SubscribesController>/5
@@ -38,9 +46,11 @@ namespace MusicEvents.Controllers
         // POST api/<SubscribesController>
         [Route("artistsubscribe")]
         [HttpPost]
-        public async Task<IActionResult> SubscribeToArtist(int artistApiId, int userId)
+        public IActionResult SubscribeToArtist(int artistApiId, int userId)
         {
-            return Ok(await _subscriptionService.SubscribeToArtist(artistApiId, userId));
+            _jobService.SubscribeToArtistJob(artistApiId, userId);
+            return Ok();
+            //return Ok(await _subscriptionService.SubscribeToArtist(artistApiId, userId));
             //return await ExecuteAction(async () =>
             //{
             //    return await _subscriptionService.SubscribeToArtist(artistApiId, userId);

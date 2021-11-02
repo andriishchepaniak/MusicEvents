@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using SongkickAPI.Settings;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Hangfire;
 
 namespace MusicEvents
 {
@@ -45,7 +46,10 @@ namespace MusicEvents
             services.AddMvc().AddNewtonsoftJson(o =>
             {
                 o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });   
+            });
+
+            services.AddHangfire(h => h.UseSqlServerStorage(Configuration.GetConnectionString("HangfireConnection")));
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +67,8 @@ namespace MusicEvents
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseHangfireDashboard("/dashboard");
 
             app.UseEndpoints(endpoints =>
             {
