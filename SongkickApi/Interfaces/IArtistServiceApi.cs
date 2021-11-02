@@ -8,8 +8,8 @@ namespace SongkickAPI.Interfaces
 {
     public interface IArtistServiceApi
     {
-        Task<IEnumerable<Artist>> GetArtistsByName(string artistName);
-        Task<IEnumerable<Artist>> GetSimilarArtists(int artistId);
-        Task<Artist> GetArtistDetails(int artistId);
+        Task<IEnumerable<ArtistApi>> GetArtistsByName(string artistName);
+        Task<IEnumerable<ArtistApi>> GetSimilarArtists(int artistId);
+        Task<ArtistApi> GetArtistDetails(int artistId);
     }
 }

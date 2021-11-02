@@ -28,17 +28,27 @@ namespace Core.Services
 
         public async Task<Event> Add(Event entity)
         {
-            return await _unitOfWork.EventRepository.Add(entity);
+            await _unitOfWork.EventRepository.Add(entity);
+            await _unitOfWork.SaveAsync();
+            return entity;
         }
 
         public async Task<IEnumerable<Event>> AddRange(IEnumerable<Event> entities)
         {
-            return await _unitOfWork.EventRepository.AddRange(entities);
+            await _unitOfWork.EventRepository.AddRange(entities);
+            await _unitOfWork.SaveAsync();
+            return entities;
         }
 
         public async Task<int> Delete(int id)
         {
             _unitOfWork.EventRepository.Delete(id);
+            return await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<int> DeleteAll()
+        {
+            _unitOfWork.EventRepository.DeleteAll();
             return await _unitOfWork.SaveAsync();
         }
 

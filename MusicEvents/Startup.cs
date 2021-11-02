@@ -11,7 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SongkickApi;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using SongkickAPI.Settings;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace MusicEvents
 {
@@ -37,10 +40,12 @@ namespace MusicEvents
 
             ConfigureSongkickApiExtension.ConfigureSongkickApi(services, Configuration);
 
-            ConfigureCoreExtension.ConfigureCore(services);
+            ConfigureCoreExtension.ConfigureCore(services, Configuration);
 
-            services.AddMvc()
-                .AddNewtonsoftJson();
+            services.AddMvc().AddNewtonsoftJson(o =>
+            {
+                o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });   
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

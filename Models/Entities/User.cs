@@ -15,7 +15,8 @@ namespace Models.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public int Age { get; set; }
-
+        
+        [JsonIgnore]
         public virtual List<Artist> Artists { get; set; }
         public virtual List<City> Cities { get; set; }
         public virtual List<ArtistAndCitySubscription> ArtistAndCitySubscriptions { get; set; }

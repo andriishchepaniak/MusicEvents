@@ -1,4 +1,5 @@
 ﻿using Core.DTO;
+using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -9,12 +10,12 @@ namespace Core.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDTO>> GetAll();
-        Task<IEnumerable<UserDTO>> GetAll(Expression<Func<UserDTO, bool>> predicate);
-        Task<IEnumerable<UserDTO>> GetRange(int offset, int count);
-        Task<UserDTO> GetById(int id);
-        Task<UserDTO> Add(UserDTO entity);
-        Task<UserDTO> Update(UserDTO entity);
+        Task<IEnumerable<User>> GetAll();
+        Task<IEnumerable<User>> GetAll(Expression<Func<User, bool>> predicate);
+        Task<IEnumerable<User>> GetRange(int offset, int count);
+        Task<User> GetById(int id);
+        Task<User> Add(User entity);
+        Task<User> Update(User entity);
         Task<int> Delete(int id);
     }
 }

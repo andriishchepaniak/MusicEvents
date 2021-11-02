@@ -1,4 +1,6 @@
 ﻿using Core.Jobs;
+using Core.Services;
+using DAL;
 using System;
 
 namespace TestApp
@@ -7,7 +9,7 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            AddArtistEventsScheduler.Start(2332047);
+            
 
             Console.ReadLine();
             Console.WriteLine("Done");

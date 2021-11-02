@@ -34,7 +34,7 @@ namespace SongkickAPI.Services
             IRestResponse response = await _client.ExecuteAsync(request);
             return GetTotalCount(response);
         }
-        public async Task<IEnumerable<EventApi>> GetArtistsUpcomingEvents(int artistId, int page)
+        public async Task<IEnumerable<EventApi>> GetArtistsUpcomingEvents(int artistId, int page=1)
         {
             var request = new RestRequest($"artists/{artistId}/calendar.json?apikey={api_key}&page={page}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
@@ -46,7 +46,7 @@ namespace SongkickAPI.Services
             return events;
         }
         
-        public async Task<IEnumerable<EventApi>> GetVenuesUpcomingEvents(int venueId, int page)
+        public async Task<IEnumerable<EventApi>> GetVenuesUpcomingEvents(int venueId, int page=1)
         {
             var request = new RestRequest
                 ($"venues/{venueId}/calendar.json?apikey={api_key}&page={page}", Method.GET);
@@ -58,7 +58,7 @@ namespace SongkickAPI.Services
             return events;
         }
 
-        public async Task<IEnumerable<EventApi>> GetMetroUpcomingEvents(int metroAreaId, int page)
+        public async Task<IEnumerable<EventApi>> GetMetroUpcomingEvents(int metroAreaId, int page=1)
         {
             var request = new RestRequest
                 ($"metro_areas/{metroAreaId}/calendar.json?apikey={api_key}&page={page}", Method.GET);

@@ -13,10 +13,13 @@ namespace DAL
         Task<IEnumerable<TEntity>> GetAll(Expression<Func<TEntity, bool>> predicate);
         Task<IEnumerable<TEntity>> GetRange(int offset, int count);
         Task<TEntity> GetById(int id);
+        Task<TEntity> GetByField(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> Add(TEntity entity);
         Task<IEnumerable<TEntity>> AddRange(IEnumerable<TEntity> entities);
         TEntity Update(TEntity entity);
+        Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
         void Delete(TEntity entity);
         void Delete(int id);
+        void DeleteAll();
     }
 }

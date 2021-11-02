@@ -13,15 +13,13 @@ namespace Core.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
-        public async Task<UserDTO> Add(UserDTO entity)
+        public async Task<User> Add(User entity)
         {
-            await _unitOfWork.UserRepository.Add(_mapper.Map<User>(entity));
+            await _unitOfWork.UserRepository.Add(entity);
             await _unitOfWork.SaveAsync();
             return entity;
         }
@@ -32,36 +30,29 @@ namespace Core.Services
             return await _unitOfWork.SaveAsync();
         }
 
-        public async Task<IEnumerable<UserDTO>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return _mapper
-                .Map<IEnumerable<UserDTO>>(await _unitOfWork.UserRepository.GetAll());
+            return await _unitOfWork.UserRepository.GetAll();
         }
 
-        public async Task<IEnumerable<UserDTO>> GetAll(Expression<Func<UserDTO, bool>> predicate)
+        public async Task<IEnumerable<User>> GetAll(Expression<Func<User, bool>> predicate)
         {
-            var pred = _mapper.Map<Expression<Func<User, bool>>>(predicate);
-            return _mapper
-                .Map<IEnumerable<UserDTO>>(await _unitOfWork.UserRepository.GetAll(pred));
+            return await _unitOfWork.UserRepository.GetAll(predicate);
         }
 
-        public async Task<UserDTO> GetById(int id)
+        public async Task<User> GetById(int id)
         {
-            return _mapper
-                .Map<UserDTO>(await _unitOfWork.UserRepository.GetById(id));
+            return await _unitOfWork.UserRepository.GetById(id);
         }
 
-        public async Task<IEnumerable<UserDTO>> GetRange(int offset, int count)
+        public async Task<IEnumerable<User>> GetRange(int offset, int count)
         {
-            return _mapper
-                .Map<IEnumerable<UserDTO>>
-                (await _unitOfWork.UserRepository.GetRange(offset, count));
+            return await _unitOfWork.UserRepository.GetRange(offset, count);
         }
 
-        public async Task<UserDTO> Update(UserDTO entity)
+        public async Task<User> Update(User entity)
         {
-            var usr = _mapper.Map<User>(entity);
-            _unitOfWork.UserRepository.Update(usr);
+            _unitOfWork.UserRepository.Update(entity);
             await _unitOfWork.SaveAsync();
             return entity;
         }

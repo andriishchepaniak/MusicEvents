@@ -6,7 +6,7 @@ namespace SongkickEntities
 {
     public class Performance
     {
-        public Artist artist { get; set; }
+        public ArtistApi artist { get; set; }
         public int id { get; set; }
         public string displayName { get; set; }
         public int billingIndex { get; set; }

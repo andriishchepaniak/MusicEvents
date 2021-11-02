@@ -9,7 +9,7 @@ namespace Models.SongkickEntities
 {
     public class LocationCity
     {
-        public City city { get; set; }
+        public CityApi city { get; set; }
         public MetroArea metroArea { get; set; }
     }
 }

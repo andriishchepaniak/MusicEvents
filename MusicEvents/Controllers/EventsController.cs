@@ -1,14 +1,9 @@
-﻿using Core.DTO;
-using Core.Interfaces;
-using Core.Jobs;
-using Core.Services;
+﻿using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models.Entities;
 using MusicEvents.Controllers;
 using SongkickAPI.Interfaces;
-using SongkickAPI.Services;
-using SongkickEntities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,7 +30,6 @@ namespace MusicEventsMVC.Controllers
         [HttpGet()]
         public async Task<IActionResult> GetArtistsEvents(int artistId, int page = 1)
         {
-            AddArtistEventsScheduler.Start(artistId);
             return Ok(await _eventService.GetEventsByArtistId(artistId, page));
             //return await ExecuteAction(async () =>
             //{
@@ -88,12 +82,63 @@ namespace MusicEventsMVC.Controllers
                 return await _eventService.GetArtistAndCityEventsByUserId(userId, page);
             });
         }
-        
+
         // GET api/<EventsController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEventById(int id)
         {
             return await ExecuteAction(async () => await _eventServiceApi.EventDetails(id));
+        }
+        [Route("getAll")]
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            return await ExecuteAction(async () => await _eventService.GetAll());
+        }
+        [Route("addEvent")]
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Event e)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.Add(e);
+            });
+        }
+        [Route("addEvents")]
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] List<Event> events)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.AddRange(events);
+            });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] Event e)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.Update(e);
+            });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.Delete(id);
+            });
+        }
+        [Route("deleteAll")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAll()
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _eventService.DeleteAll();
+            });
         }
     }
 }

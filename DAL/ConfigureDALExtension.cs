@@ -18,6 +18,8 @@ namespace DAL
             });
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IEventRepository, EventRepository>();
+            services.AddTransient<IArtistRepository, ArtistRepository>();
+            services.AddTransient<ICityRepository, CityRepository>();
             services.AddTransient<IArtistSubscriptionRepository, ArtistSubscriptionRepository>();
             services.AddTransient<ICitySubscriptionRepository, CitySubscriptionRepository>();
             services.AddTransient<IArtistAndCitySubscriptionRepository, 

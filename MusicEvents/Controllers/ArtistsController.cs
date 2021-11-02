@@ -1,13 +1,10 @@
-﻿using Core.Interfaces;
-using Core.Services;
+﻿using AutoMapper;
+using Core.Interfaces;
+using DAL.UnitOfWorkService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Models.Entities;
 using SongkickAPI.Interfaces;
-using SongkickAPI.Services;
-using SongkickEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -57,13 +54,53 @@ namespace MusicEvents.Controllers
             });
         }
 
-        // GET api/<EventsController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetArtistById(int id)
         {
             return await ExecuteAction(async () =>
             {
                 return await _artistServiceApi.GetArtistDetails(id);
+            });
+        }
+        [Route("getAll")]
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            return await ExecuteAction(async () => await _artistService.GetAll());
+        }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Artist artist)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _artistService.Add(artist);
+            });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] Artist artist)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _artistService.Update(artist);
+            });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _artistService.Delete(id);
+            });
+        }
+        [Route("deleteAll")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAll()
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _artistService.DeleteAll();
             });
         }
     }

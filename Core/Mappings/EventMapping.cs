@@ -12,13 +12,23 @@ namespace Core.Mappings
     {
         public static Event MapToEvent(EventApi eventApi)
         {
-            return new Event
+            return new Event()
             {
-                Id = eventApi.id,
                 ArtistApiId = eventApi.performance[0].artist.id,
+                CityApiId = eventApi.venue.metroArea.id,
+                EventApiId = eventApi.id,
                 Date = DateTime.Parse(eventApi.start.date),
                 DisplayName = eventApi.displayName
             };
+        }
+        public static IEnumerable<Event> MapToEvent(IEnumerable<EventApi> events)
+        {
+            var newEvents = new List<Event>();
+            foreach (var e in events)
+            {
+                newEvents.Add(MapToEvent(e));
+            }
+            return newEvents;
         }
     }
 }

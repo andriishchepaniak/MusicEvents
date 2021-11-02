@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Entities
 {
-    public class City
+    public class City : IBaseEntity
     {
         public int Id { get; set; }
         public int CityApiId { get; set; }

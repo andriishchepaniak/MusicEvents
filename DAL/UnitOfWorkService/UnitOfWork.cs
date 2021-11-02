@@ -18,6 +18,8 @@ namespace DAL.UnitOfWorkService
 
         public IArtistAndCitySubscriptionRepository ArtistAndCitySubscription { get; }
         public IEventRepository EventRepository { get; }
+        public IArtistRepository ArtistRepository { get; }
+        public ICityRepository CityRepository { get; }
 
         public UnitOfWork(
             AppDbContext context,
@@ -25,7 +27,9 @@ namespace DAL.UnitOfWorkService
             IArtistSubscriptionRepository artistSubscription,
             ICitySubscriptionRepository citySubscription,
             IArtistAndCitySubscriptionRepository artistAndCitySubscription,
-            IEventRepository eventRepository)
+            IEventRepository eventRepository,
+            IArtistRepository artistRepository,
+            ICityRepository cityRepository)
         {
             _context = context;
             UserRepository = userRepository;
@@ -33,6 +37,8 @@ namespace DAL.UnitOfWorkService
             CitySubscription = citySubscription;
             ArtistAndCitySubscription = artistAndCitySubscription;
             EventRepository = eventRepository;
+            ArtistRepository = artistRepository;
+            CityRepository = cityRepository;
         }
         public async Task<int> SaveAsync()
         {

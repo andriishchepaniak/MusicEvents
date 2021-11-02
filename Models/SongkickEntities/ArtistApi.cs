@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SongkickEntities
 {
-    public class Artist
+    public class ArtistApi
     {
         public string uri { get; set; }
         public string displayName { get; set; }

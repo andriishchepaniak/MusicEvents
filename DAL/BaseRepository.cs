@@ -62,13 +62,32 @@ namespace DAL
 
         public async Task<IEnumerable<TEntity>> GetRange(int offset, int count)
         {
-            return await ComplexEntities.Skip(offset).Take(count).ToListAsync();
+            return await ComplexEntities
+                .Skip(offset)
+                .Take(count)
+                .ToListAsync();
         }
 
         public void Delete(int id)
         {
-            var entity = _db.Set<TEntity>().FirstOrDefault(e => e.Id.Equals(id));
+            var entity = _db.Set<TEntity>()
+                .FirstOrDefault(e => e.Id.Equals(id));
             _db.Set<TEntity>().Remove(entity);
+        }
+
+        public async Task<TEntity> GetByField(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _db.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        }
+
+        public void DeleteAll()
+        {
+            _db.Set<TEntity>().RemoveRange(_db.Set<TEntity>());
+        }
+
+        public async Task<bool> Any(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _db.Set<TEntity>().AnyAsync(predicate);
         }
     }
 }

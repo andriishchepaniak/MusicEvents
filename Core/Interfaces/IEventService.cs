@@ -21,5 +21,6 @@ namespace Core.Interfaces
         Task<IEnumerable<Event>> AddRange(IEnumerable<Event> entities);
         Task<Event> Update(Event entity);
         Task<int> Delete(int id);
+        Task<int> DeleteAll();
     }
 }

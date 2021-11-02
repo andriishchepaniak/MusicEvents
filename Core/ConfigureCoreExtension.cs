@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
+using Core.EmailService;
 using Core.Interfaces;
-using Core.Jobs;
 using Core.Mappings;
 using Core.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core
 {
     public static class ConfigureCoreExtension
     {
-        public static void ConfigureCore(IServiceCollection services)
+        public static void ConfigureCore(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton(new MapperConfiguration(config =>
             {
@@ -21,12 +22,11 @@ namespace Core
             services.AddTransient<IArtistAndCitySubscriptionService, ArtistAndCitySubscriptionService>();
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<IArtistService, ArtistService>();
+            services.AddTransient<ICityService, CityService>();
+            services.AddTransient<ISubscriptionService, SubscriptionService>();
 
-            services.AddScoped<AddArtistEventsJob>();
-            //var serviceCollection = new ServiceCollection();
-            //serviceCollection
-            //var serviceProvider = serviceCollection.BuildServiceProvider();
-            //scheduler.JobFactory = new AddArtistEventsJobFactory(serviceProvider);
+            services.AddTransient<IMailService, MailService>();
+            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
         }
     }
 }

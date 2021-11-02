@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Models.Entities;
 using MusicEvents.Controllers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -49,7 +50,7 @@ namespace MusicEventsMVC.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserDTO user)
+        public async Task<IActionResult> Post([FromBody] User user)
         {
             return await ExecuteAction(async () =>
             {
@@ -60,7 +61,7 @@ namespace MusicEventsMVC.Controllers
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UserDTO user)
+        public async Task<IActionResult> Put(int id, [FromBody] User user)
         {
             return await ExecuteAction(async () =>
             {

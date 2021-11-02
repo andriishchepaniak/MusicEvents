@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SongkickEntities
 {
-    public class City
+    public class CityApi
     {
         public int id { get; set; }
         public string uri { get; set; }
