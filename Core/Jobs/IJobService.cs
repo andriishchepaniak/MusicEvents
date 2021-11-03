@@ -11,5 +11,6 @@ namespace Core.Jobs
         void SubscribeToArtistJob(int artistApiId, int userId);
         void SubscribeToCityJob(int cityApiId, int userId);
         void SubscribeToArtistAndCityJob(int artistApiId, int cityApiId, int userId);
+        void NotifyUsersAboutEventsJob();
     }
 }

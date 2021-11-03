@@ -26,7 +26,7 @@ namespace Core
             services.AddTransient<ICityService, CityService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
             services.AddTransient<INotificationService, NotificationService>();
-            services.AddTransient<IJobService, JobService>();
+            services.AddTransient<JobService>();
 
             services.AddTransient<IMailService, MailService>();
             services.Configure<MailSettings>(configuration.GetSection("MailSettings"));

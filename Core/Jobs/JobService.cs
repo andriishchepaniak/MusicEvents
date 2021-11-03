@@ -9,32 +9,39 @@ using System.Threading.Tasks;
 
 namespace Core.Jobs
 {
-    public class JobService : IJobService
+    public class JobService //: IJobService
     {
-        private readonly ISubscriptionService _subscriptionService;
-        IBackgroundJobClient client;
-        public JobService(ISubscriptionService subscriptionService)
+       // private readonly ISubscriptionService _subscriptionService;
+        //private readonly INotificationService _notificationService;
+        //IBackgroundJobClient client;
+        public JobService()//ISubscriptionService subscriptionService, INotificationService notificationService)
         {
-            _subscriptionService = subscriptionService;
+            //_subscriptionService = subscriptionService;
+            //_notificationService = notificationService;
         }
-        public void SubscribeToArtistAndCityJob(int artistApiId, int cityApiId, int userId)
+        public static void SubscribeToArtistAndCityJob(int artistApiId, int cityApiId, int userId)
         {
             //BackgroundJob.Enqueue(() => _subscriptionService.SubscribeToArtistAndCity(artistApiId, cityApiId, userId));
             BackgroundJob.Enqueue<ISubscriptionService>(job => job.SubscribeToArtistAndCity(artistApiId, cityApiId, userId));
         }
 
-        public void SubscribeToArtistJob(int artistApiId, int userId)
+        public static void SubscribeToArtistJob(int artistApiId, int userId)
         {
-            BackgroundJob.Enqueue(() => _subscriptionService.SubscribeToArtist(artistApiId, userId));
+            BackgroundJob.Enqueue<ISubscriptionService>(job => job.SubscribeToArtist(artistApiId, userId));
         }
 
-        public void SubscribeToCityJob(int cityApiId, int userId)
+        public static void SubscribeToCityJob(int cityApiId, int userId)
         {
-            BackgroundJob.Enqueue(() => _subscriptionService.SubscribeToCity(cityApiId, userId));
+            BackgroundJob.Enqueue<ISubscriptionService>(job => job.SubscribeToCity(cityApiId, userId));
         }
-        public void SendEmailsAboutEvents(int cityApiId, int userId)
+        public static void SendEmailsAboutEvents(int cityApiId, int userId)
         {
-            BackgroundJob.Enqueue(() => _subscriptionService.SubscribeToCity(cityApiId, userId));
+            BackgroundJob.Enqueue<ISubscriptionService>(job => job.SubscribeToCity(cityApiId, userId));
+        }
+
+        public static void NotifyUsersAboutEventsJob()
+        {
+            RecurringJob.AddOrUpdate<INotificationService>(job => job.NotifyUsersAboutEvents(), Cron.Daily);
         }
     }
 }

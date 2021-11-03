@@ -9,5 +9,6 @@ namespace Core.EmailService
     public interface IMailService
     {
         Task SendEmailAsync(MailRequest mailRequest);
+        Task SendNotificationEmailAsync(EventsMailRequest eventsmailRequest);
     }
 }

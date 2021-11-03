@@ -18,29 +18,31 @@ namespace MusicEvents.Controllers
     {
         private readonly ISubscriptionService _subscriptionService;
         private readonly INotificationService _notificationService;
-        private readonly IJobService _jobService;
+        //private readonly IJobService _jobService;
         public SubscribesController(
             ISubscriptionService subscriptionService,
-            IJobService jobService,
+            //IJobService jobService,
             INotificationService notificationService,
             ILogger<SubscribesController> logger) : base(logger)
         {
             _subscriptionService = subscriptionService;
             _notificationService = notificationService;
-            _jobService = jobService;
+            //_jobService = jobService;
         }
         // GET: api/<SubscribesController>
         [HttpGet]
         public async Task<IEnumerable<Event>> Get()
         {
             return await _notificationService.NotifyUsersAboutEvents();
+
         }
 
         // GET api/<SubscribesController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            JobService.NotifyUsersAboutEventsJob();
+            return "0k";
         }
 
         // POST api/<SubscribesController>
@@ -48,7 +50,7 @@ namespace MusicEvents.Controllers
         [HttpPost]
         public IActionResult SubscribeToArtist(int artistApiId, int userId)
         {
-            _jobService.SubscribeToArtistJob(artistApiId, userId);
+            JobService.SubscribeToArtistJob(artistApiId, userId);
             return Ok();
             //return Ok(await _subscriptionService.SubscribeToArtist(artistApiId, userId));
             //return await ExecuteAction(async () =>

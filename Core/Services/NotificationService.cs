@@ -33,13 +33,19 @@ namespace Core.Services
                 var e = await _eventServiceApi.EventDetails(item.EventApiId);
                 foreach (var user in item.Users)
                 {
-                    MailRequest mailRequest = new MailRequest()
+                    EventsMailRequest eventsMailRequest = new EventsMailRequest()
                     {
                         ToEmail = user.Email,
-                        Subject = e.displayName,
-                        Body = e.displayName
+                        Subject = "Email notification",
+                        EventName = e.displayName,
+                        ArtistName = e.performance[0].artist.displayName,
+                        Date = e.start.date,
+                        UserName = user.FirstName + " " + user.LastName,
+                        City = e.location.city,
+                        Venue = e.venue.displayName,
+                        WebSite = e.uri
                     };
-                    await _mailService.SendEmailAsync(mailRequest);
+                    await _mailService.SendNotificationEmailAsync(eventsMailRequest);
                 }
             }
             return events;
