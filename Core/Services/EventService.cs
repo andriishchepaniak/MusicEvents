@@ -78,11 +78,13 @@ namespace Core.Services
 
         public async Task<IEnumerable<EventApi>> GetArtistEventsByUserId(int userId, int page)
         {
-            var artistSubs = await _unitOfWork.ArtistSubscription.GetAll(s => s.UserId == userId);
+            //var artistSubs = await _unitOfWork.ArtistSubscription.GetAll(s => s.UserId == userId);
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+
             var result = new List<EventApi>();
-            foreach (var sub in artistSubs)
+            foreach (var sub in user.Artists)
             {
-                var events = await _eventServiceApi.GetArtistsUpcomingEvents(sub.ArtistId, page);
+                var events = await _eventServiceApi.GetArtistsUpcomingEvents(sub.ArtistApiId, page);
                 result.AddRange(events);
             }
             return result;
@@ -95,11 +97,12 @@ namespace Core.Services
 
         public async Task<IEnumerable<EventApi>> GetCityEventsByUserId(int userId, int page)
         {
-            var citySubs = await _unitOfWork.CitySubscription.GetAll(s => s.UserId == userId);
+            //var citySubs = await _unitOfWork.CitySubscription.GetAll(s => s.UserId == userId);
+            var user = await _unitOfWork.UserRepository.GetById(userId);
             var result = new List<EventApi>();
-            foreach (var sub in citySubs)
+            foreach (var sub in user.Cities)
             {
-                var events = await _eventServiceApi.GetMetroUpcomingEvents(sub.CityId, page);
+                var events = await _eventServiceApi.GetMetroUpcomingEvents(sub.CityApiId, page);
                 result.AddRange(events);
             }
             return result;

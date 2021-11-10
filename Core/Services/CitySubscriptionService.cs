@@ -1,74 +1,57 @@
 ﻿using AutoMapper;
-using Core.DTO;
 using Core.Interfaces;
 using DAL.UnitOfWorkService;
 using Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+using SongkickAPI.Interfaces;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class CitySubscriptionService : ICitySubscriptionService
+    public class CitySubscriptionService : SubscriptionService, ICitySubscriptionService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CitySubscriptionService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IArtistServiceApi _artistServiceApi;
+        public CitySubscriptionService(
+            IUnitOfWork unitOfWork,
+            IArtistServiceApi artistServiceApi,
+            IEventServiceApi eventServiceApi,
+            IMapper mapper) : base(unitOfWork, eventServiceApi)
         {
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _artistServiceApi = artistServiceApi;
         }
-        public async Task<CitySubscriptionDTO> Add(CitySubscriptionDTO entity)
+        private async Task<City> CreateCitySubscribe(int cityApiId, int userId)
         {
-            await _unitOfWork.CitySubscription.Add(_mapper.Map<CitySubscription>(entity));
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+            var city = await _unitOfWork.CityRepository.GetByField(c => c.CityApiId == cityApiId);
+            if (!user.Cities.Any(c => c.CityApiId == city.CityApiId))
+            {
+                user.Cities.Add(city);
+            }
+            var events = await _unitOfWork.EventRepository.GetAll(e => e.CityApiId == cityApiId);
+            foreach (var ev in events)
+            {
+                if (!user.Events.Any(e => e.EventApiId == ev.EventApiId))
+                {
+                    user.Events.Add(ev);
+                }
+            }
             await _unitOfWork.SaveAsync();
-            return entity;
+            return await _unitOfWork.CityRepository.GetByField(a => a.CityApiId == cityApiId);
         }
-
-        public async void Delete(CitySubscriptionDTO entity)
+        public async Task<City> SubscribeToCity(int cityApiId, int userId)
         {
-            _unitOfWork.CitySubscription.Delete(_mapper.Map<CitySubscription>(entity));
-            await _unitOfWork.SaveAsync();
-        }
-
-        public async Task<int> Delete(int id)
-        {
-            _unitOfWork.CitySubscription.Delete(id);
-            return await _unitOfWork.SaveAsync();
-        }
-
-        public async Task<IEnumerable<CitySubscriptionDTO>> GetAll()
-        {
-            return _mapper
-                .Map<IEnumerable<CitySubscriptionDTO>>
-                (await _unitOfWork.CitySubscription.GetAll());
-        }
-
-        public Task<IEnumerable<CitySubscriptionDTO>> GetAll(Expression<Func<CitySubscriptionDTO, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<CitySubscriptionDTO> GetById(int id)
-        {
-            return _mapper
-                .Map<CitySubscriptionDTO>(await _unitOfWork.CitySubscription.GetById(id));
-        }
-
-        public async Task<IEnumerable<CitySubscriptionDTO>> GetRange(int offset, int count)
-        {
-            return _mapper
-                .Map<IEnumerable<CitySubscriptionDTO>>
-                (await _unitOfWork.CitySubscription.GetRange(offset, count));
-        }
-
-        public async Task<CitySubscriptionDTO> Update(CitySubscriptionDTO entity)
-        {
-            var sub = _mapper.Map<CitySubscription>(entity);
-            _unitOfWork.CitySubscription.Update(sub);
-            await _unitOfWork.SaveAsync();
-            return entity;
+            var city = await _unitOfWork.CityRepository.GetByField(a => a.CityApiId == cityApiId);
+            if (city == null)
+            {
+                var cityFromApi = new City() { CityApiId = cityApiId };
+                var totalCount = await _eventServiceApi.GetEventsCountByCity(cityApiId);
+                await _unitOfWork.CityRepository.Add(cityFromApi);
+                await AddEventsFromApi(cityApiId, totalCount, EntityFilter.City);
+                return await CreateCitySubscribe(cityApiId, userId);
+            }
+            return await CreateCitySubscribe(cityApiId, userId);
         }
     }
 }

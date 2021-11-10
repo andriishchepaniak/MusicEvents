@@ -8,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class ArtistAndCitySubscriptionRepository : 
-        BaseRepository<ArtistAndCitySubscription>, 
-        IArtistAndCitySubscriptionRepository
+    public class ArtistAndCitySubscriptionRepository : BaseRepository<ArtistAndCitySubscription>, IArtistAndCitySubscriptionRepository
     {
         public ArtistAndCitySubscriptionRepository(AppDbContext appDbContext) : base(appDbContext)
         {

@@ -12,10 +12,6 @@ namespace DAL.UnitOfWorkService
         private readonly AppDbContext _context;
         public IUserRepository UserRepository { get; }
 
-        public IArtistSubscriptionRepository ArtistSubscription { get; }
-
-        public ICitySubscriptionRepository CitySubscription { get; }
-
         public IArtistAndCitySubscriptionRepository ArtistAndCitySubscription { get; }
         public IEventRepository EventRepository { get; }
         public IArtistRepository ArtistRepository { get; }
@@ -24,8 +20,6 @@ namespace DAL.UnitOfWorkService
         public UnitOfWork(
             AppDbContext context,
             IUserRepository userRepository,
-            IArtistSubscriptionRepository artistSubscription,
-            ICitySubscriptionRepository citySubscription,
             IArtistAndCitySubscriptionRepository artistAndCitySubscription,
             IEventRepository eventRepository,
             IArtistRepository artistRepository,
@@ -33,8 +27,6 @@ namespace DAL.UnitOfWorkService
         {
             _context = context;
             UserRepository = userRepository;
-            ArtistSubscription = artistSubscription;
-            CitySubscription = citySubscription;
             ArtistAndCitySubscription = artistAndCitySubscription;
             EventRepository = eventRepository;
             ArtistRepository = artistRepository;

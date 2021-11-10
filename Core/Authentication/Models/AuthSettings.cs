@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Jobs
+namespace Core.Authentication.Models
 {
-    public interface IJobService
+    public class AuthSettings
     {
-        void NotifyUsersAboutEventsJob();
+        public string Secret { get; set; }
     }
 }

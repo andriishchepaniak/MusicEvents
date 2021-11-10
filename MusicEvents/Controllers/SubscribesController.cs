@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces;
 using Core.Jobs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models.Entities;
@@ -16,43 +17,30 @@ namespace MusicEvents.Controllers
     [ApiController]
     public class SubscribesController : BaseController<SubscribesController>
     {
-        private readonly ISubscriptionService _subscriptionService;
+        private readonly IArtistAndCitySubscriptionService _artistAndCitySubscription;
+        private readonly IArtistSubscriptionService _artistSubscription;
+        private readonly ICitySubscriptionService _citySubscription;
         private readonly INotificationService _notificationService;
         //private readonly IJobService _jobService;
         public SubscribesController(
-            ISubscriptionService subscriptionService,
-            //IJobService jobService,
+            IArtistAndCitySubscriptionService artistAndCitySubscription,
+            IArtistSubscriptionService artistSubscription,
+            ICitySubscriptionService citySubscription,
             INotificationService notificationService,
             ILogger<SubscribesController> logger) : base(logger)
         {
-            _subscriptionService = subscriptionService;
             _notificationService = notificationService;
-            //_jobService = jobService;
+            _artistAndCitySubscription = artistAndCitySubscription;
+            _artistSubscription = artistSubscription;
+            _citySubscription = citySubscription;
         }
-        // GET: api/<SubscribesController>
-        [HttpGet]
-        public async Task<IEnumerable<Event>> Get()
-        {
-            return await _notificationService.NotifyUsersAboutEvents();
-
-        }
-
-        // GET api/<SubscribesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            JobService.NotifyUsersAboutEventsJob();
-            return "0k";
-        }
-
-        // POST api/<SubscribesController>
+        [Authorize]
         [Route("artistsubscribe")]
         [HttpPost]
-        public IActionResult SubscribeToArtist(int artistApiId, int userId)
+        public async Task<IActionResult> SubscribeToArtist(int artistApiId, int userId)
         {
-            JobService.SubscribeToArtistJob(artistApiId, userId);
-            return Ok();
-            //return Ok(await _subscriptionService.SubscribeToArtist(artistApiId, userId));
+            var id = Convert.ToInt32(User.Identity.Name);
+            return Ok(await _artistSubscription.SubscribeToArtist(artistApiId, userId));
             //return await ExecuteAction(async () =>
             //{
             //    return await _subscriptionService.SubscribeToArtist(artistApiId, userId);
@@ -62,7 +50,7 @@ namespace MusicEvents.Controllers
         [HttpPost]
         public async Task<IActionResult> SubscribeToCity(int cityApiId, int userId)
         {
-            return Ok(await _subscriptionService.SubscribeToCity(cityApiId, userId));
+            return Ok(await _citySubscription.SubscribeToCity(cityApiId, userId));
             //return await ExecuteAction(async () =>
             //{
             //    return await _subscriptionService.SubscribeToArtist(artistApiId, userId);
@@ -72,23 +60,11 @@ namespace MusicEvents.Controllers
         [HttpPost]
         public async Task<IActionResult> SubscribeToArtistAndCity(int artistApiId, int cityApiId, int userId)
         {
-            return Ok(await _subscriptionService.SubscribeToArtistAndCity(artistApiId, cityApiId, userId));
+            return Ok(await _artistAndCitySubscription.SubscribeToArtistAndCity(artistApiId, cityApiId, userId));
             //return await ExecuteAction(async () =>
             //{
             //    return await _subscriptionService.SubscribeToArtist(artistApiId, userId);
             //});
-        }
-
-        // PUT api/<SubscribesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<SubscribesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

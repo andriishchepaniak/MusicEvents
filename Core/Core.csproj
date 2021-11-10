@@ -5,17 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="EmailService\Tamplates\notificationTamplate.html" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="EmailService\Tamplates\notificationTamplate.html">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Hangfire" Version="1.7.26" />
     <PackageReference Include="MailKit" Version="2.15.0" />

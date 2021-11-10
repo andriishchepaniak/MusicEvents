@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Core.DTO;
+using Core.Authentication.Models;
 using Models.Entities;
-using SongkickEntities;
 
 namespace Core.Mappings
 {
@@ -9,11 +8,11 @@ namespace Core.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<CitySubscription, CitySubscriptionDTO>().ReverseMap();
-            CreateMap<ArtistAndCitySubscription, ArtistAndCitySubscriptionDTO>().ReverseMap();
-            CreateMap<ArtistSubscription, ArtistSubscriptionDTO>().ReverseMap();
-
+            //CreateMap<User, UserDTO>().ReverseMap();
+            //CreateMap<CitySubscription, CitySubscriptionDTO>().ReverseMap();
+            //CreateMap<ArtistAndCitySubscription, ArtistAndCitySubscriptionDTO>().ReverseMap();
+            //CreateMap<ArtistSubscription, ArtistSubscriptionDTO>().ReverseMap();
+            CreateMap<User, RegisterModel>().ReverseMap();
             //CreateMap<Event, EventApi>()
             //    .ForMember(x => x.id, m => m.MapFrom(x => x.Id))
             //    .ForPath(x => x.start.date, m => m.MapFrom(x => x.Date))

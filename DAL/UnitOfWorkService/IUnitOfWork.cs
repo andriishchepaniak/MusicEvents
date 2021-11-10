@@ -10,8 +10,6 @@ namespace DAL.UnitOfWorkService
     public interface IUnitOfWork
     {
         IUserRepository UserRepository { get; }
-        IArtistSubscriptionRepository ArtistSubscription { get; }
-        ICitySubscriptionRepository CitySubscription { get; }
         IArtistAndCitySubscriptionRepository ArtistAndCitySubscription { get; }
         IEventRepository EventRepository { get; }
         IArtistRepository ArtistRepository { get; }

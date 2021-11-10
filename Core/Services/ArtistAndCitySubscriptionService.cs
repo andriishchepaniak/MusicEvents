@@ -1,76 +1,70 @@
 ﻿using AutoMapper;
-using Core.DTO;
 using Core.Interfaces;
+using Core.Mappings;
 using DAL.UnitOfWorkService;
 using Models.Entities;
-using System;
-using System.Collections.Generic;
+using SongkickAPI.Interfaces;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class ArtistAndCitySubscriptionService : IArtistAndCitySubscriptionService
+    public class ArtistAndCitySubscriptionService : SubscriptionService, IArtistAndCitySubscriptionService
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ArtistAndCitySubscriptionService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IArtistServiceApi _artistServiceApi;
+        public ArtistAndCitySubscriptionService(
+            IUnitOfWork unitOfWork,
+            IArtistServiceApi artistServiceApi,
+            IEventServiceApi eventServiceApi,
+            IMapper mapper) : base(unitOfWork, eventServiceApi)
         {
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _artistServiceApi = artistServiceApi;
         }
-        public async Task<ArtistAndCitySubscriptionDTO> Add(ArtistAndCitySubscriptionDTO entity)
+        private async Task<ArtistAndCitySubscription> CreateArtistAndCitySubscribe(int artistApiId, int cityApiId, int userId)
         {
-            await _unitOfWork.ArtistAndCitySubscription
-                .Add(_mapper.Map<ArtistAndCitySubscription>(entity));
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+            
+            var subscription = new ArtistAndCitySubscription()
+            {
+                ArtistId = artistApiId,
+                CityId = cityApiId,
+                UserId = userId
+            };
+            var result = await _unitOfWork.ArtistAndCitySubscription.Add(subscription);
+            var events = await _unitOfWork.EventRepository.GetAll(e => e.ArtistApiId == artistApiId && e.CityApiId == cityApiId);
+            foreach (var item in events)
+            {
+                var cond = user.Events.Any(e => e.EventApiId == item.EventApiId);
+                if (!cond)
+                {
+                    user.Events.Add(item);
+                }
+            }
             await _unitOfWork.SaveAsync();
-            return entity;
+            return subscription;
         }
-
-        public async Task<int> Delete(int id)
+        public async Task<ArtistAndCitySubscription> SubscribeToArtistAndCity(int artistApiId, int cityApiId, int userId)
         {
-            _unitOfWork.ArtistAndCitySubscription.Delete(id);
-            return await _unitOfWork.SaveAsync();
-        }
+            var city = await _unitOfWork.CityRepository.GetByField(c => c.CityApiId == cityApiId);
+            var artist = await _unitOfWork.ArtistRepository.GetByField(a => a.ArtistApiId == artistApiId);
 
-        public async Task<IEnumerable<ArtistAndCitySubscriptionDTO>> GetAll()
-        {
-            return _mapper.Map<IEnumerable<ArtistAndCitySubscriptionDTO>>
-                (await _unitOfWork.ArtistAndCitySubscription.GetAll());
-        }
-
-        public async Task<IEnumerable<ArtistAndCitySubscriptionDTO>> GetAll
-            (Expression<Func<ArtistAndCitySubscriptionDTO, bool>> predicate)
-        {
-            var expression = _mapper.Map<Expression<Func<ArtistAndCitySubscription, bool>>>
-                (predicate);
-
-            return _mapper.Map<IEnumerable<ArtistAndCitySubscriptionDTO>>
-                (await _unitOfWork.ArtistAndCitySubscription.GetAll(expression));
-        }
-
-        public async Task<ArtistAndCitySubscriptionDTO> GetById(int id)
-        {
-            return _mapper.Map<ArtistAndCitySubscriptionDTO>
-                (await _unitOfWork.ArtistAndCitySubscription.GetById(id));
-        }
-
-        public async Task<IEnumerable<ArtistAndCitySubscriptionDTO>> GetRange
-            (int offset, int count)
-        {
-            return _mapper.Map<IEnumerable<ArtistAndCitySubscriptionDTO>>
-                (await _unitOfWork.ArtistAndCitySubscription.GetRange(offset, count));
-        }
-
-        public async Task<ArtistAndCitySubscriptionDTO> Update(ArtistAndCitySubscriptionDTO entity)
-        {
-            _unitOfWork.ArtistAndCitySubscription.Update
-                (_mapper.Map<ArtistAndCitySubscription>(entity));
-
-            await _unitOfWork.SaveAsync();
-            return entity;
+            if (artist == null)
+            {
+                var artistFromApi = ArtistMapping.MapToArtist(await _artistServiceApi.GetArtistDetails(artistApiId));
+                await _unitOfWork.ArtistRepository.Add(artistFromApi);
+                var totalCount = await _eventServiceApi.GetEventsCountByArtist(artistApiId);
+                await AddEventsFromApi(artistApiId, totalCount, EntityFilter.Artist);
+            }
+            if (city == null)
+            {
+                var cityFromApi = new City() { CityApiId = cityApiId };
+                await _unitOfWork.CityRepository.Add(cityFromApi);
+                var totalCount = await _eventServiceApi.GetEventsCountByCity(cityApiId);
+                await AddEventsFromApi(cityApiId, totalCount, EntityFilter.City);
+            }
+            return await CreateArtistAndCitySubscribe(artistApiId, cityApiId, userId);
         }
     }
 }
