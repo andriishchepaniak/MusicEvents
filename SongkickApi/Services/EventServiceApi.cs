@@ -39,10 +39,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"artists/{artistId}/calendar.json?apikey={api_key}&page={page}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JArray eventsArr = (JArray)ParseResult(response)["event"];
-            int totalCount = GetTotalCount(response);
-            var events = eventsArr.ToObject<List<EventApi>>();
-            
+            var events = ParseResult(response)["event"].ToObject<List<EventApi>>();
             return events;
         }
         
@@ -52,9 +49,7 @@ namespace SongkickAPI.Services
                 ($"venues/{venueId}/calendar.json?apikey={api_key}&page={page}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JArray eventsArr = (JArray)ParseResult(response)["event"];
-
-            var events = eventsArr.ToObject<List<EventApi>>();
+            var events = ParseResult(response)["event"].ToObject<List<EventApi>>();
             return events;
         }
 
@@ -64,9 +59,7 @@ namespace SongkickAPI.Services
                 ($"metro_areas/{metroAreaId}/calendar.json?apikey={api_key}&page={page}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JArray eventsArr = (JArray)ParseResult(response)["event"];
-
-            var events = eventsArr.ToObject<List<EventApi>>();
+            var events = ParseResult(response)["event"].ToObject<List<EventApi>>();
             return events;
         }
 
@@ -75,9 +68,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"events/{eventId}.json?apikey={api_key}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JObject eventsArr = (JObject)ParseResult(response)["event"];
-
-            var Event = eventsArr.ToObject<EventApi>();
+            var Event = ParseResult(response)["event"].ToObject<EventApi>();
             return Event;
         }
 

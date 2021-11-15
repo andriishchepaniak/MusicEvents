@@ -21,9 +21,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"search/venues.json?apikey={api_key}&query={venueName}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JArray venuesArr = (JArray)ParseResult(response)["venue"];
-
-            var venues = venuesArr.ToObject<List<Venue>>();
+            var venues = ParseResult(response)["venue"].ToObject<List<Venue>>();
             return venues;
         }
         public async Task<Venue> GetVenueDetails(int venueId)
@@ -31,9 +29,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"venues/{venueId}.json?apikey={api_key}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JObject venueObj = (JObject)ParseResult(response)["venue"];
-
-            var venue = venueObj.ToObject<Venue>();
+            var venue = ParseResult(response)["venue"].ToObject<Venue>();
             return venue;
         }
     }

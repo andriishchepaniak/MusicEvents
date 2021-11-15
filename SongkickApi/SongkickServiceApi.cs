@@ -20,21 +20,14 @@ namespace SongkickAPI
 
         public int GetTotalCount(IRestResponse response)
         {
-            JObject joResponse = JObject.Parse(response.Content);
-            JObject resPageObject = (JObject)joResponse["resultsPage"];
-            int totalEntries = (int)resPageObject["totalEntries"];
-            //JObject resultObj = (JObject)resPageObject["results"];
-
+            var totalEntries = JObject.Parse(response.Content)["resultsPage"]["totalEntries"].ToObject<int>();
             return totalEntries;
         }
 
         public JObject ParseResult(IRestResponse response)
         {
-            JObject joResponse = JObject.Parse(response.Content);
-            JObject resPageObject = (JObject)joResponse["resultsPage"];
-            JObject resultObj = (JObject)resPageObject["results"];
-
-            return resultObj;
+            var res = JObject.Parse(response.Content)["resultsPage"]["results"].ToObject<JObject>();
+            return res;
         }
     }
 }

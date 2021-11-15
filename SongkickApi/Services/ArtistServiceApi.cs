@@ -22,9 +22,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"artists/{artistId}.json?apikey={api_key}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JObject eventsArr = (JObject)ParseResult(response)["artist"];
-
-            var artist = eventsArr.ToObject<ArtistApi>();
+            var artist = ParseResult(response)["artist"].ToObject<ArtistApi>();
             return artist;
         }
 
@@ -33,9 +31,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"search/artists.json?apikey={api_key}&query={artistName}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JArray artistsArr = (JArray)ParseResult(response)["artist"];
-
-            var artists = artistsArr.ToObject<List<ArtistApi>>();
+            var artists = ParseResult(response)["artist"].ToObject<List<ArtistApi>>();
             return artists;
         }
         public async Task<IEnumerable<ArtistApi>> GetSimilarArtists(int artistId)
@@ -43,9 +39,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"artists/{artistId}/similar_artists.json?apikey={api_key}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JArray artistsArr = (JArray)ParseResult(response)["artist"];
-
-            var artists = artistsArr.ToObject<List<ArtistApi>>();
+            var artists = ParseResult(response)["artist"].ToObject<List<ArtistApi>>();
             return artists;
         }
     }

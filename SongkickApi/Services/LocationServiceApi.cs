@@ -23,9 +23,7 @@ namespace SongkickAPI.Services
             var request = new RestRequest($"search/locations.json?apikey={api_key}&query={locationName}", Method.GET);
             IRestResponse response = await _client.ExecuteAsync(request);
 
-            JArray locationsArr = (JArray)ParseResult(response)["location"];
-
-            var locations = locationsArr.ToObject<List<LocationCity>>();
+            var locations = ParseResult(response)["location"].ToObject<List<LocationCity>>();
             return locations;
         }
     }
