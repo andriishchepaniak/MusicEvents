@@ -31,7 +31,8 @@ namespace Core
             services.AddTransient<IAuthService, AuthService>();
 
             services.AddTransient<IMailService, MailService>();
-            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+            services.Configure<MailSettings>(configuration.GetSection("MailSettingsDevelopment"));
+            //services.Configure<MailSettings>(configuration.GetSection("MailSettingsProduction"));
         }
     }
 }

@@ -11,13 +11,9 @@ namespace Core.Jobs
 {
     public class JobService //: IJobService
     {
-       // private readonly ISubscriptionService _subscriptionService;
-        //private readonly INotificationService _notificationService;
-        //IBackgroundJobClient client;
         public JobService()//ISubscriptionService subscriptionService, INotificationService notificationService)
         {
-            //_subscriptionService = subscriptionService;
-            //_notificationService = notificationService;
+            
         }
         
         public static void NotifyUsersAboutEventsJob()

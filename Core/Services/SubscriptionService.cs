@@ -53,8 +53,8 @@ namespace Core.Services
                 var events = filter == EntityFilter.Artist
                 ? EventMapping.MapToEvent(await _eventServiceApi.GetArtistsUpcomingEvents(entityId, i))
                 : EventMapping.MapToEvent(await _eventServiceApi.GetMetroUpcomingEvents(entityId, i));
-                var concert = new Event();
-                var c = events.Contains(concert);
+                //var concert = new Event();
+                //var c = events.Contains(concert);
                 foreach (var ev in events)
                 {
                     var cond = await _unitOfWork.EventRepository.Any(e => e.EventApiId == ev.EventApiId);

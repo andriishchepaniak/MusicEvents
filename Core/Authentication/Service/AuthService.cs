@@ -21,6 +21,7 @@ namespace Core.Authentication.Service
                 return null;
 
             var user = await _userService.GetByField(u => u.Email == email);
+            //var user = _userService.SingleOrDefault(u => u.Email == email);
 
             // check if username exists
             if (user == null)

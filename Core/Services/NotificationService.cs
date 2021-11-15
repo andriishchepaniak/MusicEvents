@@ -26,7 +26,7 @@ namespace Core.Services
         }
         public async Task<IEnumerable<Event>> NotifyUsersAboutEvents()
         {
-            var afterWeek = DateTime.Today.AddDays(7);
+            var afterWeek = DateTime.Today.AddDays(24);
             var events = await _unitOfWork.EventRepository.GetAllWithUsers(e => e.Date == afterWeek);
             foreach (var item in events)
             {

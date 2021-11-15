@@ -82,5 +82,10 @@ namespace Core.Services
         {
             return Hash(inputPassword) == dbPassword;
         }
+
+        public User SingleOrDefault(Expression<Func<User, bool>> predicate)
+        {
+            return _unitOfWork.UserRepository.SingleOrDefault(predicate);
+        }
     }
 }

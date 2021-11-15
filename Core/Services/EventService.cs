@@ -130,5 +130,42 @@ namespace Core.Services
             await _unitOfWork.SaveAsync();
             return entity;
         }
+        public async Task RefreshEvents()
+        {
+            var events = await _unitOfWork.EventRepository.GetAll();
+            var artists = await _unitOfWork.ArtistRepository.GetAll();
+            var cities = await _unitOfWork.CityRepository.GetAll();
+            foreach (var item in events)
+            {
+                if(item.Date < DateTime.Now)
+                {
+                    _unitOfWork.EventRepository.Delete(item.Id);
+                }
+            }
+            foreach (var item in artists)
+            {
+                var artistEvents = await _eventServiceApi.GetArtistsUpcomingEvents(item.ArtistApiId);
+                foreach (var e in artistEvents)
+                {
+                    if (!events.Contains(EventMapping.MapToEvent(e)))
+                    {
+                        await _unitOfWork.EventRepository.Add(EventMapping.MapToEvent(e));
+                    }
+                }
+                await _unitOfWork.SaveAsync();
+            }
+            foreach (var item in cities)
+            {
+                var cityEvents = await _eventServiceApi.GetMetroUpcomingEvents(item.CityApiId);
+                foreach (var e in cityEvents)
+                {
+                    if (!events.Contains(EventMapping.MapToEvent(e)))
+                    {
+                        await _unitOfWork.EventRepository.Add(EventMapping.MapToEvent(e));
+                    }
+                }
+                await _unitOfWork.SaveAsync();
+            }
+        }
     }
 }

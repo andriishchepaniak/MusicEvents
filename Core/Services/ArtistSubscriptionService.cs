@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using Core.Mappings;
 using DAL.UnitOfWorkService;
+using Models.Entities;
 using SongkickAPI.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,6 +54,7 @@ namespace Core.Services
                 var artistFromApi = ArtistMapping.MapToArtist(await _artistServiceApi.GetArtistDetails(artistApiId));
                 var totalCount = await _eventServiceApi.GetEventsCountByArtist(artistApiId);
                 await _unitOfWork.ArtistRepository.Add(artistFromApi);
+                await _unitOfWork.SaveAsync();
                 await AddEventsFromApi(artistApiId, totalCount, EntityFilter.Artist);
                 return await CreateArtistSubscribe(artistApiId, userId);
             }

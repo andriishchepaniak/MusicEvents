@@ -15,6 +15,7 @@ namespace Core.Interfaces
         Task<User> GetByField(Expression<Func<User, bool>> predicate);
         Task<User> Add(User entity);
         Task<User> Update(User entity);
+        User SingleOrDefault(Expression<Func<User, bool>> predicate);
         Task<int> Delete(int id);
         bool VerifyPasswordHash(string inputPassword, string dbPassword);
     }
