@@ -34,12 +34,12 @@ namespace MusicEvents.Controllers
             _artistSubscription = artistSubscription;
             _citySubscription = citySubscription;
         }
-        [Authorize]
+        //[Authorize]
         [Route("artistsubscribe")]
         [HttpPost]
         public async Task<IActionResult> SubscribeToArtist(int artistApiId, int userId)
         {
-            var id = Convert.ToInt32(User.Identity.Name);
+            //var id = Convert.ToInt32(User.Identity?.Name);
             return Ok(await _artistSubscription.SubscribeToArtist(artistApiId, userId));
             //return await ExecuteAction(async () =>
             //{

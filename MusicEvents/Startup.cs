@@ -21,6 +21,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using SpotifyApi.Interfaces;
+using SpotifyApi.Services;
+using System;
+using SpotifyApi;
 
 namespace MusicEvents
 {
@@ -37,6 +41,8 @@ namespace MusicEvents
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MusicEvents", Version = "v1" });
@@ -63,17 +69,21 @@ namespace MusicEvents
             {
                 x.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
+                    OnTokenValidated = async context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetById(userId);
-                        if (user == null)
+                        using (var scope = context.HttpContext.RequestServices.CreateScope())
                         {
-                            // return unauthorized if user no longer exists
-                            context.Fail("Unauthorized");
+                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+                            var userId = int.Parse(context.Principal.Identity.Name);
+                            var user = await userService.GetById(userId);
+                            if (user == null)
+                            {
+                                // return unauthorized if user no longer exists
+                                context.Fail("Unauthorized");
+                            }
+                            //return Task.CompletedTask;
                         }
-                        return Task.CompletedTask;
+                            
                     }
                 };
                 x.RequireHttpsMetadata = false;
@@ -87,6 +97,19 @@ namespace MusicEvents
                 };
             });
             //end
+
+            // Spotify
+            services.AddHttpClient<ISpotifyAccountService, SpotifyAccountService>(c =>
+            {
+                c.BaseAddress = new Uri("https://accounts.spotify.com/api/");
+            });
+            services.AddHttpClient<ISpotifyService, SpotifyService>(c =>
+            {
+                c.BaseAddress = new Uri("https://api.spotify.com/v1/");
+            });
+            services.Configure<ClientSettings>(Configuration.GetSection("SpotifyApiSettings"));
+            //end
+
 
             services.AddMvc().AddNewtonsoftJson(o =>
             {

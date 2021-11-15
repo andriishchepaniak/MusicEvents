@@ -81,9 +81,10 @@ namespace MusicEventsMVC.Controllers
         [Authorize]
         [Route("authTest")]
         [HttpGet]
-        public IActionResult AuthTest()
+        public async Task<IActionResult> AuthTest()
         {
-            return Ok(User.Identity.Name);
+            return Ok(await _userService.GetAll());
+            //return Ok(User.Identity.Name);
         }
     }
 }
