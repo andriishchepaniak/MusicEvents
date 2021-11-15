@@ -78,13 +78,5 @@ namespace MusicEventsMVC.Controllers
                 return await _userService.Delete(id);
             });
         }
-        [Authorize]
-        [Route("authTest")]
-        [HttpGet]
-        public async Task<IActionResult> AuthTest()
-        {
-            return Ok(await _userService.GetAll());
-            //return Ok(User.Identity.Name);
-        }
     }
 }
