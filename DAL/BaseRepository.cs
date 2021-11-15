@@ -89,5 +89,10 @@ namespace DAL
         {
             return await _db.Set<TEntity>().AnyAsync(predicate);
         }
+
+        public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _db.Set<TEntity>().SingleOrDefault(predicate);
+        }
     }
 }

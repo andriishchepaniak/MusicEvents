@@ -17,6 +17,7 @@ namespace DAL
         Task<TEntity> Add(TEntity entity);
         Task<IEnumerable<TEntity>> AddRange(IEnumerable<TEntity> entities);
         TEntity Update(TEntity entity);
+        TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
         Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
         void Delete(TEntity entity);
         void Delete(int id);
