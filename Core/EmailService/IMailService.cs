@@ -12,5 +12,6 @@ namespace Core.EmailService
     {
         Task SendEventsAsync(EventsMailRequest eventsmailRequest, List<EventApi> events);
         Task SendAlbumsAsync(EventsMailRequest eventsmailRequest, List<Album> albums);
+        string GetCurrentDirectory();
     }
 }

@@ -21,31 +21,41 @@ namespace Core.EmailService
         {
             _mailSettings = mailSettings.Value;
         }
-
+        public string GetCurrentDirectory()
+        {
+            return Directory.GetCurrentDirectory();
+        }
         public async Task SendAlbumsAsync(EventsMailRequest eventsmailRequest, List<Album> albums)
         {
-            //throw new Exception();
-            string htmlFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\AlbumsTemplates\\albumsNotificationTamplate.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
-            string listFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\AlbumsTemplates\\albumsDetails.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
+            var currentDirectory = Directory.GetCurrentDirectory();
+            currentDirectory = currentDirectory.Replace(@"\", @"\\");
+            var htmlFilePath = currentDirectory + "\\wwwroot\\Tamplates\\AlbumsTemplates\\albumsNotificationTamplate.html";
+            var listFilePath = currentDirectory + "\\wwwroot\\Tamplates\\AlbumsTemplates\\albumsDetails.html";
             StreamReader str1 = new StreamReader(htmlFilePath);
             StreamReader str2 = new StreamReader(listFilePath);
-            string MailText = str1.ReadToEnd();
-            string albumDetail = str2.ReadToEnd();
+            var MailText = str1.ReadToEnd();
+            var albumDetail = str2.ReadToEnd();
             str1.Close();
             str2.Close();
             var albumDetails = new List<string>();
 
             foreach (var album in albums)
             {
-                var artists = "";
-                foreach (var artist in album.artists.ToList())
+                var artistsNames = "";
+                var artists = album.artists.ToList();
+                for (var i = 0; i < artists.Count; i++)
                 {
-                    artists += artist.name + " & ";
+                    if(i == artists.Count - 1)
+                    {
+                        artistsNames += artists[i].name;
+                        continue;
+                    }
+                    artistsNames += artists[i].name + " & ";
                 }
                 albumDetails.Add(albumDetail
                     .Replace("[albumType]", album.album_type)
                     .Replace("[albumName]", album.name)
-                    .Replace("[artist]", artists)
+                    .Replace("[artist]", artistsNames)
                     .Replace("[date]", album.release_date.ToString())
                     .Replace("[image]", album.images[1].url)
                     .Replace("[site]", album.uri));
@@ -75,12 +85,14 @@ namespace Core.EmailService
 
         public async Task SendEventsAsync(EventsMailRequest eventsmailRequest, List<EventApi> events)
         {
-            string htmlFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\EventsTemplates\\eventsNotificationTamplate.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
-            string listFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\EventsTemplates\\eventDetails.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
+            var currentDirectory = Directory.GetCurrentDirectory();
+            currentDirectory = currentDirectory.Replace(@"\", @"\\");
+            var htmlFilePath = currentDirectory + "\\wwwroot\\Tamplates\\EventsTemplates\\eventsNotificationTamplate.html";
+            var listFilePath = currentDirectory + "\\wwwroot\\Tamplates\\EventsTemplates\\eventDetails.html";
             StreamReader str1 = new StreamReader(htmlFilePath);
             StreamReader str2 = new StreamReader(listFilePath);
-            string MailText = str1.ReadToEnd();
-            string EventDetail = str2.ReadToEnd();
+            var MailText = str1.ReadToEnd();
+            var EventDetail = str2.ReadToEnd();
             str1.Close();
             str2.Close();
             var EventDetails = new List<string>();

@@ -33,12 +33,5 @@ namespace MusicEvents.Controllers
         {
             return await ExecuteAction(async () => await _venueServiceApi.GetVenueDetails(venueId));
         }
-        [Route("testJob")]
-        [HttpGet]
-        public IActionResult NotifyJob()
-        {
-            JobService.SendAlbumsJob();
-            return Ok();
-        }
     }
 }
