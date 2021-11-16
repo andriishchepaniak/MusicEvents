@@ -18,6 +18,7 @@
     <ProjectReference Include="..\DAL\DAL.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
     <ProjectReference Include="..\SongkickApi\SongkickApi.csproj" />
+    <ProjectReference Include="..\SpotifyApi\SpotifyApi.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,9 +16,17 @@ namespace Core.Jobs
             
         }
         
-        public static void NotifyUsersAboutEventsJob()
+        //public static void NotifyUsersAboutEventsJob()
+        //{
+        //    RecurringJob.AddOrUpdate<INotificationService>(job => job.NotifyUsersAboutEvents(), Cron.Daily);
+        //}
+        public static void SendEventsJob()
         {
-            RecurringJob.AddOrUpdate<INotificationService>(job => job.NotifyUsersAboutEvents(), Cron.Daily);
+            RecurringJob.AddOrUpdate<INotificationService>(job => job.SendEvents(), Cron.Daily);
+        }
+        public static void SendAlbumsJob()
+        {
+            RecurringJob.AddOrUpdate<INotificationService>(job => job.SendAlbums(), Cron.Weekly(DayOfWeek.Saturday));
         }
     }
 }

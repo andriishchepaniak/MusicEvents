@@ -1,6 +1,8 @@
 ﻿using Core.Interfaces;
 using DAL.UnitOfWorkService;
 using Models.Entities;
+using SongkickAPI.Interfaces;
+using SongkickEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -13,9 +15,13 @@ namespace Core.Services
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public UserService(IUnitOfWork unitOfWork)
+        private readonly IEventServiceApi _eventServiceApi;
+        private readonly IArtistServiceApi _artistServiceApi;
+        public UserService(IUnitOfWork unitOfWork, IEventServiceApi eventServiceApi, IArtistServiceApi artistServiceApi)
         {
             _unitOfWork = unitOfWork;
+            _eventServiceApi = eventServiceApi;
+            _artistServiceApi = artistServiceApi;
         }
         public async Task<User> Add(User entity)
         {
@@ -86,6 +92,30 @@ namespace Core.Services
         public User SingleOrDefault(Expression<Func<User, bool>> predicate)
         {
             return _unitOfWork.UserRepository.SingleOrDefault(predicate);
+        }
+
+        public async Task<IEnumerable<EventApi>> GetUserEvents(int userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+            var result = new List<EventApi>();
+            foreach(var e in user.Events)
+            {
+                var Event = await _eventServiceApi.EventDetails(e.EventApiId);
+                result.Add(Event);
+            }
+            return result;
+        }
+
+        public async Task<IEnumerable<ArtistApi>> GetUserArtists(int userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+            var result = new List<ArtistApi>();
+            foreach (var artist in user.Artists)
+            {
+                var Artist = await _artistServiceApi.GetArtistDetails(artist.ArtistApiId);
+                result.Add(Artist);
+            }
+            return result;
         }
     }
 }

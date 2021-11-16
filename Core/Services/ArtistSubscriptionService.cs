@@ -4,6 +4,7 @@ using Core.Mappings;
 using DAL.UnitOfWorkService;
 using Models.Entities;
 using SongkickAPI.Interfaces;
+using SongkickEntities;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace Core.Services
             _artistServiceApi = artistServiceApi;
         }
 
-        private async Task<int> CreateArtistSubscribe(int artistApiId, int userId)
+        private async Task<ArtistApi> CreateArtistSubscribe(int artistApiId, int userId)
         {
             var user = await _unitOfWork.UserRepository.GetById(userId);
             var artist = await _unitOfWork.ArtistRepository.GetByField(a => a.ArtistApiId == artistApiId);
@@ -43,10 +44,11 @@ namespace Core.Services
                 }
             }
 
-            return await _unitOfWork.SaveAsync();
+            await _unitOfWork.SaveAsync();
+            return await _artistServiceApi.GetArtistDetails(artistApiId);
         }
 
-        public async Task<int> SubscribeToArtist(int artistApiId, int userId)
+        public async Task<ArtistApi> SubscribeToArtist(int artistApiId, int userId)
         {
             var artist = await _unitOfWork.ArtistRepository.GetByField(a => a.ArtistApiId == artistApiId);
             if (artist == null)
@@ -59,6 +61,25 @@ namespace Core.Services
                 return await CreateArtistSubscribe(artistApiId, userId);
             }
             return await CreateArtistSubscribe(artistApiId, userId);
+        }
+        public async Task<ArtistApi> UnSubscribeFromArtist(int artistApiId, int userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+            user.Artists.RemoveAll(a => a.ArtistApiId == artistApiId);
+            //user.Events.RemoveAll((e => e.ArtistApiId == artistApiId) && )
+            foreach (var e in user.Events.ToList())
+            {
+                if(e.ArtistApiId == artistApiId)
+                {
+                    if(!user.Cities.Any(c => c.CityApiId == e.CityApiId) 
+                        && !user.ArtistAndCitySubscriptions.Any(s => s.CityId == e.CityApiId && s.ArtistId == e.ArtistApiId))
+                    {
+                        user.Events.Remove(e);
+                    }
+                }
+            }
+            await _unitOfWork.SaveAsync();
+            return await _artistServiceApi.GetArtistDetails(artistApiId);
         }
     }
 }

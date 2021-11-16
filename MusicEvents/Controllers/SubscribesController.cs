@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace MusicEvents.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SubscribesController : BaseController<SubscribesController>
@@ -37,34 +38,63 @@ namespace MusicEvents.Controllers
         //[Authorize]
         [Route("artistsubscribe")]
         [HttpPost]
-        public async Task<IActionResult> SubscribeToArtist(int artistApiId, int userId)
+        public async Task<IActionResult> SubscribeToArtist(int artistApiId)
         {
-            //var id = Convert.ToInt32(User.Identity?.Name);
-            return Ok(await _artistSubscription.SubscribeToArtist(artistApiId, userId));
-            //return await ExecuteAction(async () =>
-            //{
-            //    return await _subscriptionService.SubscribeToArtist(artistApiId, userId);
-            //});
+            var userId = Convert.ToInt32(User.Identity.Name);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistSubscription.SubscribeToArtist(artistApiId, userId);
+            });
+        }
+        [Route("artistunsubscribe")]
+        [HttpPost]
+        public async Task<IActionResult> UnSubscribeFromArtist(int artistApiId)
+        {
+            var userId = Convert.ToInt32(User.Identity.Name);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistSubscription.UnSubscribeFromArtist(artistApiId, userId);
+            });
         }
         [Route("citysubscribe")]
         [HttpPost]
-        public async Task<IActionResult> SubscribeToCity(int cityApiId, int userId)
+        public async Task<IActionResult> SubscribeToCity(int cityApiId)
         {
-            return Ok(await _citySubscription.SubscribeToCity(cityApiId, userId));
-            //return await ExecuteAction(async () =>
-            //{
-            //    return await _subscriptionService.SubscribeToArtist(artistApiId, userId);
-            //});
+            var userId = Convert.ToInt32(User.Identity.Name);
+            return await ExecuteAction(async () =>
+            {
+                return await _citySubscription.SubscribeToCity(cityApiId, userId);
+            });
+        }
+        [Route("cityunsubscribe")]
+        [HttpPost]
+        public async Task<IActionResult> UnSubscribeFromCity(int cityApiId)
+        {
+            var userId = Convert.ToInt32(User.Identity.Name);
+            return await ExecuteAction(async () =>
+            {
+                return await _citySubscription.UnSubscribeFromCity(cityApiId, userId);
+            });
         }
         [Route("artistandcitysubscribe")]
         [HttpPost]
-        public async Task<IActionResult> SubscribeToArtistAndCity(int artistApiId, int cityApiId, int userId)
+        public async Task<IActionResult> SubscribeToArtistAndCity(int artistApiId, int cityApiId)
         {
-            return Ok(await _artistAndCitySubscription.SubscribeToArtistAndCity(artistApiId, cityApiId, userId));
-            //return await ExecuteAction(async () =>
-            //{
-            //    return await _subscriptionService.SubscribeToArtist(artistApiId, userId);
-            //});
+            var userId = Convert.ToInt32(User.Identity.Name);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistAndCitySubscription.SubscribeToArtistAndCity(artistApiId, cityApiId, userId);
+            });
+        }
+        [Route("artistandcityunsubscribe")]
+        [HttpPost]
+        public async Task<IActionResult> UnSubscribeFromArtistAndCity(int artistApiId, int cityApiId)
+        {
+            var userId = Convert.ToInt32(User.Identity.Name);
+            return await ExecuteAction(async () =>
+            {
+                return await _artistAndCitySubscription.UnSubscribeFromArtistAndCity(artistApiId, cityApiId, userId);
+            });
         }
     }
 }

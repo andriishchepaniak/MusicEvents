@@ -16,12 +16,11 @@ namespace DAL
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IEventRepository, EventRepository>();
-            services.AddScoped<IArtistRepository, ArtistRepository>();
-            services.AddScoped<ICityRepository, CityRepository>();
-            services.AddScoped<IArtistAndCitySubscriptionRepository, 
-                                  ArtistAndCitySubscriptionRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IEventRepository, EventRepository>();
+            services.AddTransient<IArtistRepository, ArtistRepository>();
+            services.AddTransient<ICityRepository, CityRepository>();
+            services.AddTransient<IArtistAndCitySubscriptionRepository, ArtistAndCitySubscriptionRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

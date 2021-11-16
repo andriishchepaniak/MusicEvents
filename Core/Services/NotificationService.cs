@@ -1,10 +1,13 @@
 ﻿using Core.EmailService;
 using Core.Interfaces;
+using Core.Mappings;
 using DAL.UnitOfWorkService;
 using Models.Entities;
+using Models.SpotifyEntities;
 using SongkickAPI.Interfaces;
 using SongkickAPI.Services;
 using SongkickEntities;
+using SpotifyApi.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,38 +20,85 @@ namespace Core.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEventServiceApi _eventServiceApi;
+        private readonly IArtistServiceApi _artistServiceApi;
+        private readonly ISpotifyService _spotifyService;
+        private readonly ISpotifyAccountService _spotifyAccountService;
         private readonly IMailService _mailService;
-        public NotificationService(IUnitOfWork unitOfWork, IEventServiceApi eventServiceApi, IMailService mailService)
+        public NotificationService(IUnitOfWork unitOfWork, 
+            IEventServiceApi eventServiceApi, 
+            IMailService mailService, 
+            IArtistServiceApi artistServiceApi,
+            ISpotifyAccountService spotifyAccountService,
+            ISpotifyService spotifyService)
         {
             _unitOfWork = unitOfWork;
             _eventServiceApi = eventServiceApi;
             _mailService = mailService;
+            _artistServiceApi = artistServiceApi;
+            _spotifyAccountService = spotifyAccountService;
+            _spotifyService = spotifyService;
         }
-        public async Task<IEnumerable<Event>> NotifyUsersAboutEvents()
+
+        public async Task<IEnumerable<User>> SendAlbums()
         {
-            var afterWeek = DateTime.Today.AddDays(24);
-            var events = await _unitOfWork.EventRepository.GetAllWithUsers(e => e.Date == afterWeek);
-            foreach (var item in events)
+            var date = DateTime.Now.AddMonths(-3);
+            var users = await _unitOfWork.UserRepository.GetAll();
+            foreach (var user in users)
             {
-                var e = await _eventServiceApi.EventDetails(item.EventApiId);
-                foreach (var user in item.Users)
+                if(user.Artists.ToList().Count != 0)
                 {
+                    var allAlbums = new List<Album>();
+                    foreach (var artist in user.Artists.ToList())
+                    {
+                        var songkickArtist = await _artistServiceApi.GetArtistDetails(artist.ArtistApiId);
+                        var token = await _spotifyAccountService.GetAccessToken();
+                        var spotifyArtists = await _spotifyService.GetArtistsByName(songkickArtist.displayName, token);
+                        var artistAlbums = await _spotifyService.GetAlbumsByArtistId(spotifyArtists[0].id, token);
+                        foreach (var a in artistAlbums)
+                        {
+                            if(a.release_date > date)
+                            {
+                                allAlbums.Add(a);
+                            }
+                        }
+                    }
                     EventsMailRequest eventsMailRequest = new EventsMailRequest()
                     {
                         ToEmail = user.Email,
-                        Subject = "Email notification",
-                        EventName = e.displayName,
-                        ArtistName = e.performance[0].artist.displayName,
-                        Date = e.start.date,
-                        UserName = user.FirstName + " " + user.LastName,
-                        City = e.location.city,
-                        Venue = e.venue.displayName,
-                        WebSite = e.uri
+                        Subject = "New albums notification",
+                        UserName = user.FirstName + " " + user.LastName
                     };
-                    await _mailService.SendNotificationEmailAsync(eventsMailRequest);
+                    await _mailService.SendAlbumsAsync(eventsMailRequest, allAlbums);
                 }
             }
-            return events;
+            return users;
+        }
+
+        public async Task<IEnumerable<User>> SendEvents()
+        {
+            var afterWeek = DateTime.Today.AddDays(18);
+            var users = await _unitOfWork.UserRepository.GetAll();
+            foreach (var user in users)
+            {
+                var events = user.Events.Where(e => e.Date == afterWeek).ToList();
+                if(events.Count != 0)
+                {
+                    var eventsApi = new List<EventApi>();
+                    foreach (var e in events)
+                    {
+                        var eventApi = await _eventServiceApi.EventDetails(e.EventApiId);
+                        eventsApi.Add(eventApi);
+                    }
+                    EventsMailRequest eventsMailRequest = new EventsMailRequest()
+                    {
+                        ToEmail = user.Email,
+                        Subject = "Music events notification",
+                        UserName = user.FirstName + " " + user.LastName
+                    };
+                    await _mailService.SendEventsAsync(eventsMailRequest, eventsApi);
+                }
+            }
+            return users;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Core.Jobs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SongkickAPI.Interfaces;
 using SongkickEntities;
@@ -23,14 +24,21 @@ namespace MusicEvents.Controllers
         }
         // GET: api/<VenueController>
         [HttpGet]
-        public async Task<IActionResult> GetVenuesByName(string venueName)
+        public async Task<IActionResult> GetVenuesByName(string name)
         {
-            return await ExecuteAction(async () => await _venueServiceApi.GetVenuesByName(venueName));
+            return await ExecuteAction(async () => await _venueServiceApi.GetVenuesByName(name));
         }
         [HttpGet("{venueId}")]
         public async Task<IActionResult> GetById(int venueId)
         {
             return await ExecuteAction(async () => await _venueServiceApi.GetVenueDetails(venueId));
+        }
+        [Route("testJob")]
+        [HttpGet]
+        public IActionResult NotifyJob()
+        {
+            JobService.SendAlbumsJob();
+            return Ok();
         }
     }
 }

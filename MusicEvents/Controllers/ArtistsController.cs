@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Interfaces;
 using DAL.UnitOfWorkService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models.Entities;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace MusicEvents.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ArtistsController : BaseController<ArtistsController>
@@ -25,16 +27,6 @@ namespace MusicEvents.Controllers
             _artistService = artistService;
             _artistServiceApi = artistServiceApi;
         }
-        
-        [Route("[action]/{userId}")]
-        [HttpGet()]
-        public async Task<IActionResult> GetUsersArtists(int userId)
-        {
-            return await ExecuteAction(async () =>
-            {
-                return await _artistService.GetUsersArtists(userId);
-            });
-        }
         [Route("[action]/{artistId}")]
         [HttpGet()]
         public async Task<IActionResult> GetSimilarArtists(int artistId)
@@ -44,6 +36,7 @@ namespace MusicEvents.Controllers
                 return await _artistServiceApi.GetSimilarArtists(artistId);
             });
         }
+        [AllowAnonymous]
         [Route("[action]/{artistName}")]
         [HttpGet()]
         public async Task<IActionResult> GetArtistsByName(string artistName)
@@ -53,7 +46,7 @@ namespace MusicEvents.Controllers
                 return await _artistServiceApi.GetArtistsByName(artistName);
             });
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetArtistById(int id)
         {
@@ -94,6 +87,7 @@ namespace MusicEvents.Controllers
                 return await _artistService.Delete(id);
             });
         }
+        [AllowAnonymous]
         [Route("deleteAll")]
         [HttpDelete]
         public async Task<IActionResult> DeleteAll()

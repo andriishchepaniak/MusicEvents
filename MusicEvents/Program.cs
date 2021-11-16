@@ -15,7 +15,9 @@ namespace MusicEvents
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            JobService.NotifyUsersAboutEventsJob();
+            JobService.SendEventsJob();
+
+            //JobService.NotifyUsersAboutEventsJob();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

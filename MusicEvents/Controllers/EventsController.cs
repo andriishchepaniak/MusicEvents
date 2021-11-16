@@ -25,17 +25,14 @@ namespace MusicEventsMVC.Controllers
             _eventServiceApi = service;
             _eventService = eventService;
         }
-        // GET: api/<EventsController>
         [Route("[action]/{artistId}")]
         [HttpGet()]
         public async Task<IActionResult> GetArtistsEvents(int artistId, int page = 1)
         {
-            return Ok(await _eventService.GetEventsByArtistId(artistId, page));
-            //return await ExecuteAction(async () =>
-            //{
-            //    //return await _eventServiceApi.GetArtistsUpcomingEvents(artistId, page);
-            //    return await _eventService.GetEventsByArtistId(artistId, page);
-            //});
+            return await ExecuteAction(async () =>
+            {
+                return await _eventServiceApi.GetArtistsUpcomingEvents(artistId, page);
+            });
         }
         [Route("[action]/{venueId}")]
         [HttpGet()]
@@ -55,35 +52,7 @@ namespace MusicEventsMVC.Controllers
                 return await _eventServiceApi.GetMetroUpcomingEvents(metroId, page);
             });
         }
-        [Route("[action]/{userId}")]
-        [HttpGet()]
-        public async Task<IActionResult> GetUsersArtistsEvents(int userId, int page = 1)
-        {
-            return await ExecuteAction(async () =>
-            {
-                return await _eventService.GetArtistEventsByUserId(userId, page);
-            });
-        }
-        [Route("[action]/{userId}")]
-        [HttpGet()]
-        public async Task<IActionResult> GetUsersCitiesEvents(int userId, int page = 1)
-        {
-            return await ExecuteAction(async () =>
-            {
-                return await _eventService.GetCityEventsByUserId(userId, page);
-            });
-        }
-        [Route("[action]/{userId}")]
-        [HttpGet()]
-        public async Task<IActionResult> GetUsersArtistsAndCitiesEvents(int userId, int page = 1)
-        {
-            return await ExecuteAction(async () =>
-            {
-                return await _eventService.GetArtistAndCityEventsByUserId(userId, page);
-            });
-        }
-
-        // GET api/<EventsController>/5
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEventById(int id)
         {

@@ -19,35 +19,54 @@ namespace MusicEventsMVC.Controllers
         {
             _userService = userService;
         }
-        // GET: api/<UsersController>
         [HttpGet]
         public async Task<IActionResult> Get(int offset=0, int count=2)
         {
-            //var result = await _userService.GetRange(offset, count);
-            //return result != null 
-            //    ? Ok(result) 
-            //    : BadRequest();
             return await ExecuteAction(async () =>
             {
                 return await _userService.GetRange(offset, count);
             });
         }
 
-        // GET api/<UsersController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            //var result = await _userService.GetById(id);
-            //return result != null
-            //    ? Ok(result)
-            //    : BadRequest();
             return await ExecuteAction(async () =>
             {
                 return await _userService.GetById(id);
             });
         }
+        //[Authorize]
+        [Route("{id}/artists")]
+        [HttpGet]
+        public async Task<IActionResult> GetArtists(int id)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _userService.GetUserArtists(id);
+            });
+        }
+        [Route("{id}/cities")]
+        [HttpGet]
+        public async Task<IActionResult> GetCities(int id)
+        {
+            return await ExecuteAction(async () =>
+            {
+                var user = await _userService.GetById(id);
+                return user.Cities;
+            });
+        }
+        
+        [Route("{id}/events")]
+        [HttpGet]
+        public async Task<IActionResult> GetEvents(int id)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _userService.GetUserEvents(id);
+            });
+        }
 
-        // POST api/<UsersController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] User user)
         {
@@ -58,7 +77,6 @@ namespace MusicEventsMVC.Controllers
             }); 
         }
 
-        // PUT api/<UsersController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] User user)
         {
@@ -69,7 +87,6 @@ namespace MusicEventsMVC.Controllers
             });
         }
 
-        // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

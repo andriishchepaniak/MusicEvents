@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Models.SpotifyEntities;
+using SongkickEntities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,7 @@ namespace Core.EmailService
 {
     public interface IMailService
     {
-        Task SendEmailAsync(MailRequest mailRequest);
-        Task SendNotificationEmailAsync(EventsMailRequest eventsmailRequest);
+        Task SendEventsAsync(EventsMailRequest eventsmailRequest, List<EventApi> events);
+        Task SendAlbumsAsync(EventsMailRequest eventsmailRequest, List<Album> albums);
     }
 }

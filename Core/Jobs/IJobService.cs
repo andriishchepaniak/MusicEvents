@@ -9,5 +9,6 @@ namespace Core.Jobs
     public interface IJobService
     {
         void NotifyUsersAboutEventsJob();
+        void NotifyUsersAboutEventsListJob();
     }
 }

@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Models.SpotifyEntities;
+using Newtonsoft.Json.Linq;
 using SpotifyApi.Interfaces;
-using SpotifyApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

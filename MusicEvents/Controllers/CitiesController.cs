@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models.Entities;
+using SongkickAPI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,15 @@ namespace MusicEvents.Controllers
     public class CitiesController : BaseController<CitiesController>
     {
         private readonly ICityService _cityService;
+        private readonly ILocationServiceApi _locationServiceApi;
         public CitiesController(
             ICityService cityService,
+            ILocationServiceApi locationServiceApi,
             ILogger<CitiesController> logger) : base(logger)
         {
             _cityService = cityService;
+            _locationServiceApi = locationServiceApi;
         }
-        // GET: api/<CitiesController>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -31,8 +34,16 @@ namespace MusicEvents.Controllers
                 return await _cityService.GetAll();
             });
         }
+        [Route("[action]/{cityName}")]
+        [HttpGet]
+        public async Task<IActionResult> GetCity(string cityName)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _locationServiceApi.GetByName(cityName);
+            });
+        }
 
-        // GET api/<CitiesController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -42,7 +53,6 @@ namespace MusicEvents.Controllers
             });
         }
 
-        // POST api/<CitiesController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] City value)
         {
@@ -52,7 +62,6 @@ namespace MusicEvents.Controllers
             });
         }
 
-        // PUT api/<CitiesController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] City value)
         {
@@ -62,7 +71,6 @@ namespace MusicEvents.Controllers
             });
         }
 
-        // DELETE api/<CitiesController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

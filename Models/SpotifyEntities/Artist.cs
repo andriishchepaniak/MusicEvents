@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpotifyApi.Models
+namespace Models.SpotifyEntities
 {
     public class Artist
     {

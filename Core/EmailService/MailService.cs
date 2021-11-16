@@ -2,6 +2,9 @@
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Models.Entities;
+using Models.SpotifyEntities;
+using SongkickEntities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,35 +22,49 @@ namespace Core.EmailService
             _mailSettings = mailSettings.Value;
         }
 
-        public async Task SendEmailAsync(MailRequest mailRequest)
+        public async Task SendAlbumsAsync(EventsMailRequest eventsmailRequest, List<Album> albums)
         {
+            //throw new Exception();
+            string htmlFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\AlbumsTemplates\\albumsNotificationTamplate.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
+            string listFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\AlbumsTemplates\\albumsDetails.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
+            StreamReader str1 = new StreamReader(htmlFilePath);
+            StreamReader str2 = new StreamReader(listFilePath);
+            string MailText = str1.ReadToEnd();
+            string albumDetail = str2.ReadToEnd();
+            str1.Close();
+            str2.Close();
+            var albumDetails = new List<string>();
+
+            foreach (var album in albums)
+            {
+                var artists = "";
+                foreach (var artist in album.artists.ToList())
+                {
+                    artists += artist.name + " & ";
+                }
+                albumDetails.Add(albumDetail
+                    .Replace("[albumType]", album.album_type)
+                    .Replace("[albumName]", album.name)
+                    .Replace("[artist]", artists)
+                    .Replace("[date]", album.release_date.ToString())
+                    .Replace("[image]", album.images[1].url)
+                    .Replace("[site]", album.uri));
+            }
+
+            MailText = MailText.Replace("[username]", eventsmailRequest.UserName);
+
+            foreach (var i in albumDetails)
+            {
+                MailText = MailText.Replace("[details]", i + "[details]");
+            }
+            MailText = MailText.Replace("[details]", "");
+
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
-            email.Subject = mailRequest.Subject;
+            email.To.Add(MailboxAddress.Parse(eventsmailRequest.ToEmail));
+            email.Subject = eventsmailRequest.Subject;
             var builder = new BodyBuilder();
-
-            #region Attach files
-            //For attach files
-            //if (mailRequest.Attachments != null)
-            //{
-            //    byte[] fileBytes;
-            //    foreach (var file in mailRequest.Attachments)
-            //    {
-            //        if (file.Length > 0)
-            //        {
-            //            using (var ms = new MemoryStream())
-            //            {
-            //                file.CopyTo(ms);
-            //                fileBytes = ms.ToArray();
-            //            }
-            //            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
-            //        }
-            //    }
-            //}
-            #endregion
-
-            builder.HtmlBody = mailRequest.Body;
+            builder.HtmlBody = MailText;
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
@@ -56,20 +73,37 @@ namespace Core.EmailService
             smtp.Disconnect(true);
         }
 
-        public async Task SendNotificationEmailAsync(EventsMailRequest eventsmailRequest)
+        public async Task SendEventsAsync(EventsMailRequest eventsmailRequest, List<EventApi> events)
         {
-            string FilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\notificationTamplate.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
-            StreamReader str = new StreamReader(FilePath);
-            string MailText = str.ReadToEnd();
-            str.Close();
-            MailText = MailText
-                .Replace("[username]", eventsmailRequest.UserName)
-                .Replace("[eventName]", eventsmailRequest.EventName)
-                .Replace("[artist]", eventsmailRequest.ArtistName)
-                .Replace("[date]", eventsmailRequest.Date)
-                .Replace("[city]", eventsmailRequest.City)
-                .Replace("[venue]", eventsmailRequest.Venue)
-                .Replace("[site]", eventsmailRequest.WebSite);
+            string htmlFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\EventsTemplates\\eventsNotificationTamplate.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
+            string listFilePath = "D:\\Progi\\C#\\Eleks\\MusicEvents\\MusicEvents\\wwwroot\\Tamplates\\EventsTemplates\\eventDetails.html";// Directory.GetCurrentDirectory() + "\\wwwroot\\Templates\\notificationTamplate.html";
+            StreamReader str1 = new StreamReader(htmlFilePath);
+            StreamReader str2 = new StreamReader(listFilePath);
+            string MailText = str1.ReadToEnd();
+            string EventDetail = str2.ReadToEnd();
+            str1.Close();
+            str2.Close();
+            var EventDetails = new List<string>();
+
+            foreach (var e in events)
+            {
+                EventDetails.Add(EventDetail
+                    .Replace("[eventName]", e.displayName)
+                    .Replace("[artist]", e.performance[0].artist.displayName)
+                    .Replace("[date]", e.start.date)
+                    .Replace("[city]", e.location.city)
+                    .Replace("[venue]", e.venue.displayName)
+                    .Replace("[site]", e.uri));
+            }
+
+            MailText = MailText.Replace("[username]", eventsmailRequest.UserName);
+
+            foreach (var i in EventDetails)
+            {
+                MailText = MailText.Replace("[details]", i + "[details]");
+            }
+            MailText = MailText.Replace("[details]", "");
+
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(eventsmailRequest.ToEmail));

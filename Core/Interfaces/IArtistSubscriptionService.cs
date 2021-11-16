@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using SongkickEntities;
+using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
     public interface IArtistSubscriptionService
     {
-        Task<int> SubscribeToArtist(int artistApiId, int userId);
+        Task<ArtistApi> SubscribeToArtist(int artistApiId, int userId);
+        Task<ArtistApi> UnSubscribeFromArtist(int artistApiId, int userId);
     }
 }

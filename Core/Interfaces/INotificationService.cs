@@ -9,6 +9,7 @@ namespace Core.Interfaces
 {
     public interface INotificationService
     {
-        Task<IEnumerable<Event>> NotifyUsersAboutEvents();
+        Task<IEnumerable<User>> SendEvents();
+        Task<IEnumerable<User>> SendAlbums();
     }
 }

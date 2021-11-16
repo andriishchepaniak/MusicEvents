@@ -66,5 +66,21 @@ namespace Core.Services
             }
             return await CreateArtistAndCitySubscribe(artistApiId, cityApiId, userId);
         }
+        public async Task<int> UnSubscribeFromArtistAndCity(int artistApiId, int cityApiId, int userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetById(userId);
+            user.ArtistAndCitySubscriptions.RemoveAll(s => s.ArtistId == artistApiId && s.CityId == cityApiId);
+            foreach (var e in user.Events.ToList())
+            {
+                if (e.CityApiId == cityApiId && e.ArtistApiId == artistApiId)
+                {
+                    if (!user.Artists.Any(a => a.ArtistApiId == e.ArtistApiId) && !user.Cities.Any(c => c.CityApiId == cityApiId))
+                    {
+                        user.Events.Remove(e);
+                    }
+                }
+            }
+            return await _unitOfWork.SaveAsync();
+        }
     }
 }

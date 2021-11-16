@@ -1,4 +1,5 @@
 ﻿using Models.Entities;
+using SongkickEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,6 +12,8 @@ namespace Core.Interfaces
         Task<IEnumerable<User>> GetAll();
         Task<IEnumerable<User>> GetAll(Expression<Func<User, bool>> predicate);
         Task<IEnumerable<User>> GetRange(int offset, int count);
+        Task<IEnumerable<EventApi>> GetUserEvents(int userId);
+        Task<IEnumerable<ArtistApi>> GetUserArtists(int userId);
         Task<User> GetById(int id);
         Task<User> GetByField(Expression<Func<User, bool>> predicate);
         Task<User> Add(User entity);
