@@ -46,9 +46,9 @@ namespace MusicEvents.Controllers
             var albums = await _albumService.GetAlbumsByArtistId(artistId, token);
             return Ok(albums);
         }
-        [Route("search")]
+        [Route("getArtistByName")]
         [HttpGet]
-        public async Task<IActionResult> Search(string artistName)
+        public async Task<IActionResult> GetArtistByName(string artistName)
         {
             var token = await _spotifyAccountService.GetAccessToken();
             var artists = await _albumService.GetArtistsByName(artistName, token);

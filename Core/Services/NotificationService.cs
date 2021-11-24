@@ -62,13 +62,16 @@ namespace Core.Services
                             }
                         }
                     }
-                    EventsMailRequest eventsMailRequest = new EventsMailRequest()
+                    if(allAlbums.Count != 0)
                     {
-                        ToEmail = user.Email,
-                        Subject = "New albums notification",
-                        UserName = user.FirstName + " " + user.LastName
-                    };
-                    await _mailService.SendAlbumsAsync(eventsMailRequest, allAlbums);
+                        EventsMailRequest eventsMailRequest = new EventsMailRequest()
+                        {
+                            ToEmail = user.Email,
+                            Subject = "New albums notification",
+                            UserName = user.FirstName + " " + user.LastName
+                        };
+                        await _mailService.SendAlbumsAsync(eventsMailRequest, allAlbums);
+                    }
                 }
             }
             return users;
@@ -76,7 +79,7 @@ namespace Core.Services
 
         public async Task<IEnumerable<User>> SendEvents()
         {
-            var afterWeek = DateTime.Today.AddDays(18);
+            var afterWeek = DateTime.Today.AddDays(10);
             var users = await _unitOfWork.UserRepository.GetAll();
             foreach (var user in users)
             {

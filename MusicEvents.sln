@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SongkickApi", "SongkickApi\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{12A23C88-CF89-475D-B8C1-E4C677918E0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyApi", "SpotifyApi\SpotifyApi.csproj", "{6F35F271-112F-42BE-A84A-756F53088876}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpotifyApi", "SpotifyApi\SpotifyApi.csproj", "{6F35F271-112F-42BE-A84A-756F53088876}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudDApi", "AudDApi\AudDApi.csproj", "{45807B1E-A192-4B73-A6C7-7FFD580C1411}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{6F35F271-112F-42BE-A84A-756F53088876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F35F271-112F-42BE-A84A-756F53088876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F35F271-112F-42BE-A84A-756F53088876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45807B1E-A192-4B73-A6C7-7FFD580C1411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45807B1E-A192-4B73-A6C7-7FFD580C1411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45807B1E-A192-4B73-A6C7-7FFD580C1411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45807B1E-A192-4B73-A6C7-7FFD580C1411}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

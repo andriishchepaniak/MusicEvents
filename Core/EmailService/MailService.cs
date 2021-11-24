@@ -25,6 +25,23 @@ namespace Core.EmailService
         {
             return Directory.GetCurrentDirectory();
         }
+        private async Task SendMail(string mailText, EventsMailRequest eventsmailRequest)
+        {
+            mailText = mailText.Replace("[username]", eventsmailRequest.UserName);
+
+            var email = new MimeMessage();
+            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+            email.To.Add(MailboxAddress.Parse(eventsmailRequest.ToEmail));
+            email.Subject = eventsmailRequest.Subject;
+            var builder = new BodyBuilder();
+            builder.HtmlBody = mailText;
+            email.Body = builder.ToMessageBody();
+            using var smtp = new SmtpClient();
+            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
+            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+            await smtp.SendAsync(email);
+            smtp.Disconnect(true);
+        }
         public async Task SendAlbumsAsync(EventsMailRequest eventsmailRequest, List<Album> albums)
         {
             var currentDirectory = Directory.GetCurrentDirectory();
@@ -61,26 +78,13 @@ namespace Core.EmailService
                     .Replace("[site]", album.uri));
             }
 
-            MailText = MailText.Replace("[username]", eventsmailRequest.UserName);
-
             foreach (var i in albumDetails)
             {
                 MailText = MailText.Replace("[details]", i + "[details]");
             }
             MailText = MailText.Replace("[details]", "");
 
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(eventsmailRequest.ToEmail));
-            email.Subject = eventsmailRequest.Subject;
-            var builder = new BodyBuilder();
-            builder.HtmlBody = MailText;
-            email.Body = builder.ToMessageBody();
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+            await SendMail(MailText, eventsmailRequest);
         }
 
         public async Task SendEventsAsync(EventsMailRequest eventsmailRequest, List<EventApi> events)
@@ -108,26 +112,13 @@ namespace Core.EmailService
                     .Replace("[site]", e.uri));
             }
 
-            MailText = MailText.Replace("[username]", eventsmailRequest.UserName);
-
             foreach (var i in EventDetails)
             {
                 MailText = MailText.Replace("[details]", i + "[details]");
             }
             MailText = MailText.Replace("[details]", "");
 
-            var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(eventsmailRequest.ToEmail));
-            email.Subject = eventsmailRequest.Subject;
-            var builder = new BodyBuilder();
-            builder.HtmlBody = MailText;
-            email.Body = builder.ToMessageBody();
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+            await SendMail(MailText, eventsmailRequest);
         }
     }
 }
