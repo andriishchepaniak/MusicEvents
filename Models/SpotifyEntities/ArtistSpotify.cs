@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.SpotifyEntities
 {
-    public class Artist
+    public class ArtistSpotify
     {
         public string href { get; set; }
         public string id { get; set; }
