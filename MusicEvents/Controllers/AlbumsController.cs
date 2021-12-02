@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AudDApi;
+using AudDApi.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SpotifyApi.Interfaces;
@@ -14,22 +16,28 @@ namespace MusicEvents.Controllers
     public class AlbumsController : BaseController<AlbumsController>
     {
         private readonly ISpotifyAccountService _spotifyAccountService;
-        private readonly ISpotifyService _albumService;
+        private readonly ISpotifyAlbumService _albumService;
+        private readonly ISpotifyArtistService _artistService;
+        private readonly ISpotifyTrackService _trackService;
         public AlbumsController(
             ISpotifyAccountService spotifyAccountService, 
-            ISpotifyService albumService, 
+            ISpotifyAlbumService albumService,
+            ISpotifyArtistService artistService,
+            ISpotifyTrackService trackService,
             ILogger<AlbumsController> logger) : base(logger)
         {
             _spotifyAccountService = spotifyAccountService;
             _albumService = albumService;
+            _artistService = artistService;
+            _trackService = trackService;
         }
-        [Route("album")]
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var token = await _spotifyAccountService.GetAccessToken();
-            var album = await _albumService.GetAlbumById(id, token);
-            return Ok(album);
+            return await ExecuteAction(async () =>
+            {
+                return await _albumService.GetAlbumById(id);
+            });
         }
         [Route("token")]
         [HttpGet]
@@ -42,17 +50,13 @@ namespace MusicEvents.Controllers
         [HttpGet]
         public async Task<IActionResult> GetArtistAlbums(string artistId)
         {
-            var token = await _spotifyAccountService.GetAccessToken();
-            var albums = await _albumService.GetAlbumsByArtistId(artistId, token);
+            var albums = await _albumService.GetAlbumsByArtistId(artistId);
             return Ok(albums);
         }
-        [Route("getArtistByName")]
-        [HttpGet]
-        public async Task<IActionResult> GetArtistByName(string artistName)
+        [HttpGet("{albumId}/tracks")]
+        public async Task<IActionResult> GetAlbumTracks(string albumId)
         {
-            var token = await _spotifyAccountService.GetAccessToken();
-            var artists = await _albumService.GetArtistsByName(artistName, token);
-            return Ok(artists);
+            return Ok(await _trackService.GetAlbumTracks(albumId));
         }
     }
 }

@@ -1,17 +1,14 @@
 ﻿using Core.EmailService;
 using Core.Interfaces;
-using Core.Mappings;
 using DAL.UnitOfWorkService;
 using Models.Entities;
 using Models.SpotifyEntities;
 using SongkickAPI.Interfaces;
-using SongkickAPI.Services;
 using SongkickEntities;
 using SpotifyApi.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Services
@@ -21,7 +18,8 @@ namespace Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEventServiceApi _eventServiceApi;
         private readonly IArtistServiceApi _artistServiceApi;
-        private readonly ISpotifyService _spotifyService;
+        private readonly ISpotifyAlbumService _spotifyAlbumService;
+        private readonly ISpotifyArtistService _spotifyArtistService;
         private readonly ISpotifyAccountService _spotifyAccountService;
         private readonly IMailService _mailService;
         public NotificationService(IUnitOfWork unitOfWork, 
@@ -29,14 +27,16 @@ namespace Core.Services
             IMailService mailService, 
             IArtistServiceApi artistServiceApi,
             ISpotifyAccountService spotifyAccountService,
-            ISpotifyService spotifyService)
+            ISpotifyAlbumService spotifyAlbumService,
+            ISpotifyArtistService spotifyArtistService)
         {
             _unitOfWork = unitOfWork;
             _eventServiceApi = eventServiceApi;
             _mailService = mailService;
             _artistServiceApi = artistServiceApi;
             _spotifyAccountService = spotifyAccountService;
-            _spotifyService = spotifyService;
+            _spotifyAlbumService = spotifyAlbumService;
+            _spotifyArtistService = spotifyArtistService;
         }
 
         public async Task<IEnumerable<User>> SendAlbums()
@@ -52,8 +52,8 @@ namespace Core.Services
                     {
                         var songkickArtist = await _artistServiceApi.GetArtistDetails(artist.ArtistApiId);
                         var token = await _spotifyAccountService.GetAccessToken();
-                        var spotifyArtists = await _spotifyService.GetArtistsByName(songkickArtist.displayName, token);
-                        var artistAlbums = await _spotifyService.GetAlbumsByArtistId(spotifyArtists[0].id, token);
+                        var spotifyArtists = (await _spotifyArtistService.GetArtistsByName(songkickArtist.displayName)).ToList();
+                        var artistAlbums = await _spotifyAlbumService.GetAlbumsByArtistId(spotifyArtists[0].id);
                         foreach (var a in artistAlbums)
                         {
                             if(a.release_date > date)

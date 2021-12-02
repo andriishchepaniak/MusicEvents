@@ -25,6 +25,7 @@ using SpotifyApi.Interfaces;
 using SpotifyApi.Services;
 using System;
 using SpotifyApi;
+using AudDApi;
 
 namespace MusicEvents
 {
@@ -65,6 +66,8 @@ namespace MusicEvents
             ConfigureAuthExtension.ConfigureAuth(services, Configuration);
 
             ConfigureSpotifyApiExtension.ConfigureSpotifyApi(services, Configuration);
+
+            ConfigureAudDApiExtension.ConfigureAudDApi(services, Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

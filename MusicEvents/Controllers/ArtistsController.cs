@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models.Entities;
 using SongkickAPI.Interfaces;
+using SpotifyApi.Interfaces;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,13 +20,16 @@ namespace MusicEvents.Controllers
     {
         private readonly IArtistService _artistService;
         private readonly IArtistServiceApi _artistServiceApi;
+        private readonly ISpotifyArtistService _spotifyArtistService;
         public ArtistsController(
             IArtistService artistService, 
             IArtistServiceApi artistServiceApi,
+            ISpotifyArtistService spotifyArtistService,
             ILogger<ArtistsController> logger) : base(logger)
         {
             _artistService = artistService;
             _artistServiceApi = artistServiceApi;
+            _spotifyArtistService = spotifyArtistService;
         }
         [Route("[action]/{artistId}")]
         [HttpGet()]
@@ -44,6 +48,16 @@ namespace MusicEvents.Controllers
             return await ExecuteAction(async () =>
             {
                 return await _artistServiceApi.GetArtistsByName(artistName);
+            });
+        }
+        [AllowAnonymous]
+        [Route("[action]/{artistName}")]
+        [HttpGet()]
+        public async Task<IActionResult> GetSpotifyArtistsByName(string artistName)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _spotifyArtistService.GetArtistsByName(artistName);
             });
         }
         [AllowAnonymous]
