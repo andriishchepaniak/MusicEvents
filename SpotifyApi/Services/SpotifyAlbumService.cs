@@ -1,4 +1,5 @@
-﻿using Models.SpotifyEntities;
+﻿using Microsoft.Extensions.Options;
+using Models.SpotifyEntities;
 using Newtonsoft.Json.Linq;
 using SpotifyApi.Interfaces;
 using System;
@@ -12,15 +13,19 @@ using System.Threading.Tasks;
 
 namespace SpotifyApi.Services
 {
-    public class SpotifyService : ISpotifyService
+    public class SpotifyAlbumService : ISpotifyAlbumService
     {
         private readonly HttpClient _httpClient;
-        public SpotifyService(HttpClient httpClient)
+        private readonly ISpotifyAccountService _spotifyAccountService;
+        public SpotifyAlbumService(HttpClient httpClient, IOptions<ClientSettings> options, ISpotifyAccountService spotifyAccountService)
         {
             _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(options.Value.BaseUrl);
+            _spotifyAccountService = spotifyAccountService;
         }
-        public async Task<Album> GetAlbumById(string albumId, string token)
+        public async Task<Album> GetAlbumById(string albumId)
         {
+            var token = await _spotifyAccountService.GetAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.GetAsync($"albums/{albumId}");
@@ -32,8 +37,9 @@ namespace SpotifyApi.Services
 
             return result;
         }
-        public async Task<IEnumerable<Album>> GetAlbumsByArtistId(string artistId, string token)
+        public async Task<IEnumerable<Album>> GetAlbumsByArtistId(string artistId)
         {
+            var token = await _spotifyAccountService.GetAccessToken();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await _httpClient.GetAsync($"artists/{artistId}/albums");
@@ -46,24 +52,6 @@ namespace SpotifyApi.Services
             return result;
         }
 
-        public async Task<List<Artist>> GetArtistsByName(string artistName, string token, int limit=10)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await _httpClient.GetAsync($"search?q={artistName}&type=artist&limit={limit}");
-            response.EnsureSuccessStatusCode();
-            var responseStr = await response.Content.ReadAsStringAsync();
-
-            var result = JObject.Parse(responseStr)["artists"]["items"]
-                                .ToObject<List<Artist>>();
-            
-            return result;
-        }
-
-        public async Task<Artist> GetFirstArtist(string artistName, string token)
-        {
-            var result = await GetArtistsByName(artistName, token);
-            return result.First();
-        }
+        
     }
 }

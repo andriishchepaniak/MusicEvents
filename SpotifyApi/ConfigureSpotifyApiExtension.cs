@@ -14,15 +14,10 @@ namespace SpotifyApi
     {
         public static void ConfigureSpotifyApi(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHttpClient<ISpotifyAccountService, SpotifyAccountService>(c =>
-            {
-                c.BaseAddress = new Uri("https://accounts.spotify.com/api/");
-            });
-            services.AddHttpClient<ISpotifyService, SpotifyService>(c =>
-            {
-                c.BaseAddress = new Uri("https://api.spotify.com/v1/");
-            });
-            
+            services.AddHttpClient<ISpotifyAccountService, SpotifyAccountService>();
+            services.AddHttpClient<ISpotifyAlbumService, SpotifyAlbumService>();
+            services.AddHttpClient<ISpotifyArtistService, SpotifyArtistService>();
+            services.AddHttpClient<ISpotifyTrackService, SpotifyTrackService>();
             services.Configure<ClientSettings>(configuration.GetSection("SpotifyApiSettings"));
         }
     }

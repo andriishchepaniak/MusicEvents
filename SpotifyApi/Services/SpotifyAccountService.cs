@@ -21,8 +21,11 @@ namespace SpotifyApi.Services
             _clientSettings = new ClientSettings()
             {
                 ClientId = options.Value.ClientId,
-                ClientSecret = options.Value.ClientSecret
+                ClientSecret = options.Value.ClientSecret,
+                AccountBaseUrl = options.Value.AccountBaseUrl,
+                BaseUrl = options.Value.BaseUrl
             };
+            _httpClient.BaseAddress = new Uri(_clientSettings.AccountBaseUrl);
         }
         public async Task<string> GetAccessToken()
         {
