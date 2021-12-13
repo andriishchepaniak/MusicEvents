@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using DAL.UnitOfWorkService;
 using Models.Entities;
+using Models.SongkickEntities;
 using SongkickAPI.Interfaces;
 using SongkickEntities;
 using System;
@@ -17,11 +18,16 @@ namespace Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEventServiceApi _eventServiceApi;
         private readonly IArtistServiceApi _artistServiceApi;
-        public UserService(IUnitOfWork unitOfWork, IEventServiceApi eventServiceApi, IArtistServiceApi artistServiceApi)
+        private readonly ICityService _cityService;
+        public UserService(IUnitOfWork unitOfWork, 
+            IEventServiceApi eventServiceApi, 
+            IArtistServiceApi artistServiceApi,
+            ICityService cityService)
         {
             _unitOfWork = unitOfWork;
             _eventServiceApi = eventServiceApi;
             _artistServiceApi = artistServiceApi;
+            _cityService = cityService;
         }
         public async Task<User> Add(User entity)
         {
@@ -116,6 +122,24 @@ namespace Core.Services
                 result.Add(Artist);
             }
             return result;
+        }
+
+        public Task<IEnumerable<CityApi>> GetUserCities(int userId)
+        {
+            //var user = await _unitOfWork.UserRepository.GetById(userId);
+            //var result = new List<CityApi>();
+            //foreach (var city in user.Cities)
+            //{
+            //    var City = await _cityService.Ge
+            //    result.Add(Artist);
+            //}
+            //return result;
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<ArtistAndCity>> GetUserArtistsAndCities(int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

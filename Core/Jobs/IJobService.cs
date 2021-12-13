@@ -10,5 +10,7 @@ namespace Core.Jobs
     {
         void NotifyUsersAboutEventsJob();
         void NotifyUsersAboutEventsListJob();
+        void RefreshEvents();
+        void RefreshUserEvents();
     }
 }

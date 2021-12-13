@@ -167,5 +167,49 @@ namespace Core.Services
                 await _unitOfWork.SaveAsync();
             }
         }
+        public async Task RefreshUserEvents()
+        {
+            var users = await _unitOfWork.UserRepository.GetAll();
+            var artists = await _unitOfWork.ArtistRepository.GetAll();
+            var cities = await _unitOfWork.CityRepository.GetAll();
+            foreach (var user in users)
+            {
+                foreach (var artist in user.Artists.ToList())
+                {
+                    var events = await _unitOfWork.EventRepository.GetAll(e => e.ArtistApiId == artist.ArtistApiId);
+                    foreach (var e in events)
+                    {
+                        if (!user.Events.Contains(e))
+                        {
+                            user.Events.Add(e);
+                        }
+                    }
+                }
+                foreach (var city in user.Cities.ToList())
+                {
+                    var events = await _unitOfWork.EventRepository.GetAll(e => e.CityApiId == city.CityApiId);
+                    foreach (var e in events)
+                    {
+                        if (!user.Events.Contains(e))
+                        {
+                            user.Events.Add(e);
+                        }
+                    }
+                }
+                foreach (var artistAndCity in user.ArtistAndCitySubscriptions.ToList())
+                {
+                    var events = await _unitOfWork.EventRepository
+                        .GetAll(e => e.CityApiId == artistAndCity.CityId && e.ArtistApiId == artistAndCity.ArtistId);
+                    foreach (var e in events)
+                    {
+                        if (!user.Events.Contains(e))
+                        {
+                            user.Events.Add(e);
+                        }
+                    }
+                }
+                await _unitOfWork.SaveAsync();
+            }
+        }
     }
 }

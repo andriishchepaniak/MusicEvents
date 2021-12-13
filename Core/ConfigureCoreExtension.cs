@@ -29,6 +29,7 @@ namespace Core
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<JobService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IAlbumService, AlbumsService>();
 
             services.AddTransient<IMailService, MailService>();
             services.Configure<MailSettings>(configuration.GetSection("MailSettingsDevelopment"));

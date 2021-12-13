@@ -32,6 +32,20 @@ namespace MusicEvents.Controllers
             JobService.SendAlbumsJob();
             return Ok();
         }
+        [Route("refreshEvents")]
+        [HttpGet]
+        public IActionResult RefreshEvents()
+        {
+            JobService.RefreshEventsJob();
+            return Ok();
+        }
+        [Route("refreshUserEvents")]
+        [HttpGet]
+        public IActionResult RefreshUserEvents()
+        {
+            JobService.RefreshUserEventsJob();
+            return Ok();
+        }
         [Route("getcurrentdirectory")]
         [HttpGet]
         public IActionResult GetCurrentDirectory()

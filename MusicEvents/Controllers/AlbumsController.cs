@@ -1,5 +1,6 @@
 ﻿using AudDApi;
 using AudDApi.Interfaces;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,17 +20,20 @@ namespace MusicEvents.Controllers
         private readonly ISpotifyAlbumService _albumService;
         private readonly ISpotifyArtistService _artistService;
         private readonly ISpotifyTrackService _trackService;
+        private readonly IAlbumService _albumServiceCore;
         public AlbumsController(
             ISpotifyAccountService spotifyAccountService, 
             ISpotifyAlbumService albumService,
             ISpotifyArtistService artistService,
             ISpotifyTrackService trackService,
+            IAlbumService albumServiceCore,
             ILogger<AlbumsController> logger) : base(logger)
         {
             _spotifyAccountService = spotifyAccountService;
             _albumService = albumService;
             _artistService = artistService;
             _trackService = trackService;
+            _albumServiceCore = albumServiceCore;
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
@@ -37,6 +41,14 @@ namespace MusicEvents.Controllers
             return await ExecuteAction(async () =>
             {
                 return await _albumService.GetAlbumById(id);
+            });
+        }
+        [HttpGet("getBySongkickId/{id}")]
+        public async Task<IActionResult> GetBySongkickId(int id)
+        {
+            return await ExecuteAction(async () =>
+            {
+                return await _albumServiceCore.GetAlbumsBySongkickArtistId(id);
             });
         }
         [Route("token")]

@@ -22,5 +22,7 @@ namespace Core.Interfaces
         Task<Event> Update(Event entity);
         Task<int> Delete(int id);
         Task<int> DeleteAll();
+        Task RefreshEvents();
+        Task RefreshUserEvents();
     }
 }
